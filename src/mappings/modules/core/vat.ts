@@ -374,18 +374,26 @@ export function handleFork(event: LogNote): void {
       .concat(ilk),
   )
 
-  if (vault1 && vault2) {
-    vault1.collateral = vault1.collateral.minus(units.fromWad(dink))
-    vault1.debt = vault1.debt.minus(units.fromWad(dart))
-    vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
-    vault2.debt = vault2.debt.plus(units.fromWad(dart))
-    vault1.save()
-    vault2.save()
+  if (vault1 || vault2) {
+    if (vault1) {
+      vault1.collateral = vault1.collateral.minus(units.fromWad(dink))
+      vault1.debt = vault1.debt.minus(units.fromWad(dart))
+      vault1.save()
+    }
+    if (vault2) {
+      vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
+      vault2.debt = vault2.debt.plus(units.fromWad(dart))
+      vault2.save()
+    }
 
     let log = new VaultSplitChangeLog(event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-3')
     log.src = src
     log.dst = dst
-    log.vault = vault1.id
+    if (vault1) {
+      log.vault = vault1.id
+    } else if (vault2) {
+      log.vault = vault2.id
+    }
     log.collateralToMove = units.fromWad(dink)
     log.debtToMove = units.fromWad(dart)
     log.block = event.block.number
