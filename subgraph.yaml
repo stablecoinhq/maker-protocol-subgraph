@@ -12,7 +12,7 @@ dataSources:
   # Vault Engine
   - name: Vat
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Vat
       address: '0x1b1FE236166eD0Ac829fa230afE38E61bC281C5e'
@@ -113,7 +113,7 @@ dataSources:
   #  Liaison between the oracles and core contracts
   - name: Spot
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Spotter
       address: '0x54301c9E0c8728e9B2C2d2EF4052fa841F182617'
@@ -168,7 +168,7 @@ dataSources:
   # Surplus Auction
   - name: Flap
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Flapper
       address: '0x66cfE4CC02505f2BB19C5147A68F376E5F92f798'
@@ -228,7 +228,7 @@ dataSources:
   #  Liquidation Module
   - name: Dog
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Dog
       address: '0x85D5AFA199d212189fb4ed397245f93fA4514D27'
@@ -269,7 +269,7 @@ dataSources:
   # Debt Auction
   - name: Flop
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Flopper
       address: '0x53EEc18c7178f1317d8D7DFc124f37Ed3ba36769'
@@ -330,7 +330,7 @@ dataSources:
   # Balance Sheet
   - name: Vow
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Vow
       address: '0xd3563E656734650251556E7604dd24C3da9342B3'
@@ -401,7 +401,7 @@ dataSources:
   # Accumulation of Stability Fees for collateral types
   - name: Jug
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Jug
       address: '0xDC1De048663D0B9861AB145335B30b6A779904c2'
@@ -452,7 +452,7 @@ dataSources:
   # Dai Savings Rate
   - name: Pot
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Pot
       address: '0xD750E54469D3394aFC00534EF937Ac0AD5b3bF24'
@@ -509,7 +509,7 @@ dataSources:
   # Mkr
   - name: DSToken
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: DSToken
       address: '0xa1A07333CAfDFCaF5767961B2e2ac1d108e0e7A3'
@@ -545,7 +545,7 @@ dataSources:
   # Used to deploy new user proxy instances
   - name: ProxyFactory
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: DSProxyFactory
       address: '0x5ABCD00d86e94F9A7536a3387290409758F5797E'
@@ -571,7 +571,7 @@ dataSources:
   # Allow users to interact with their Vaults in an easy way, treating them as non-fungible tokens (NFTs)
   - name: CdpManager
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: DssCdpManager
       address: '0x90A142cc184d22C662f157e5dF0A0665ED73e17E'
@@ -606,7 +606,7 @@ dataSources:
   #
   - name: Dai
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       address: '0xd3EbE14668bDa053605339B76996955d942b8B74'
       abi: Dai
@@ -636,7 +636,7 @@ dataSources:
   # Auction Initiation from Liquidation
   - name: Clipper
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: Clipper
       address: '0x8D6e0Ca5ab28bbCF17AAeCB6E4b0EE34C9Ec6035'
@@ -674,7 +674,7 @@ dataSources:
   # Auction Initiation from Liquidation
   - name: StairstepExponentialDecrease
     kind: ethereum/contract
-    network: mainnet
+    network: goerli
     source:
       abi: StairstepExponentialDecrease
       address: '0x0b588100265E36A92FFDb63F6016AFC487C99DB2'
