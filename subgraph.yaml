@@ -16,7 +16,7 @@ dataSources:
     source:
       abi: Vat
       address: '0x1b1FE236166eD0Ac829fa230afE38E61bC281C5e'
-      startBlock: 8928152
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -117,7 +117,7 @@ dataSources:
     source:
       abi: Spotter
       address: '0x54301c9E0c8728e9B2C2d2EF4052fa841F182617'
-      startBlock: 8928152
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -172,7 +172,7 @@ dataSources:
     source:
       abi: Flapper
       address: '0x66cfE4CC02505f2BB19C5147A68F376E5F92f798'
-      startBlock: 8928163
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -232,7 +232,7 @@ dataSources:
     source:
       abi: Dog
       address: '0x85D5AFA199d212189fb4ed397245f93fA4514D27'
-      startBlock: 12246358
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -273,7 +273,7 @@ dataSources:
     source:
       abi: Flopper
       address: '0x53EEc18c7178f1317d8D7DFc124f37Ed3ba36769'
-      startBlock: 9006717
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -334,7 +334,7 @@ dataSources:
     source:
       abi: Vow
       address: '0xd3563E656734650251556E7604dd24C3da9342B3'
-      startBlock: 8928163
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -405,7 +405,7 @@ dataSources:
     source:
       abi: Jug
       address: '0xDC1De048663D0B9861AB145335B30b6A779904c2'
-      startBlock: 8928160
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -456,7 +456,7 @@ dataSources:
     source:
       abi: Pot
       address: '0xD750E54469D3394aFC00534EF937Ac0AD5b3bF24'
-      startBlock: 8928160
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -513,7 +513,7 @@ dataSources:
     source:
       abi: DSToken
       address: '0xa1A07333CAfDFCaF5767961B2e2ac1d108e0e7A3'
-      startBlock: 12805415
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -549,7 +549,7 @@ dataSources:
     source:
       abi: DSProxyFactory
       address: '0x5ABCD00d86e94F9A7536a3387290409758F5797E'
-      startBlock: 5834580
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -575,7 +575,7 @@ dataSources:
     source:
       abi: DssCdpManager
       address: '0x90A142cc184d22C662f157e5dF0A0665ED73e17E'
-      startBlock: 8928198
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -610,7 +610,7 @@ dataSources:
     source:
       address: '0xd3EbE14668bDa053605339B76996955d942b8B74'
       abi: Dai
-      startBlock: 8928158
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -640,7 +640,7 @@ dataSources:
     source:
       abi: Clipper
       address: '0x8D6e0Ca5ab28bbCF17AAeCB6E4b0EE34C9Ec6035'
-      startBlock: 12329686
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -678,7 +678,7 @@ dataSources:
     source:
       abi: StairstepExponentialDecrease
       address: '0x0b588100265E36A92FFDb63F6016AFC487C99DB2'
-      startBlock: 12329765
+      startBlock: 6678000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
