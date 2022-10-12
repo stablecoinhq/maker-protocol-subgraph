@@ -137,8 +137,8 @@ describe('Vat#handleFrob', () => {
 
         // test vault created from collateralType
         assert.fieldEquals('Vault', vaultId, 'collateralType', collateralTypeId)
-        assert.fieldEquals('Vault', vaultId, 'collateral', decimal.ZERO.toString())
-        assert.fieldEquals('Vault', vaultId, 'debt', decimal.ZERO.toString())
+        assert.fieldEquals('Vault', vaultId, 'collateral', "100.5")
+        assert.fieldEquals('Vault', vaultId, 'debt', "200.5")
         assert.fieldEquals('Vault', vaultId, 'owner', urnId)
         assert.fieldEquals('Vault', vaultId, 'handler', urnId)
         assert.fieldEquals('Vault', vaultId, 'openedAt', event.block.timestamp.toString())

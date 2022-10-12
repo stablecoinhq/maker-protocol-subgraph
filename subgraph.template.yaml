@@ -12,11 +12,11 @@ dataSources:
   # Vault Engine
   - name: Vat
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Vat
-      address: '0x1b1FE236166eD0Ac829fa230afE38E61bC281C5e'
-      startBlock: 6678000
+      address: '{{ Vat.address }}'
+      startBlock: {{ Vat.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -113,11 +113,11 @@ dataSources:
   #  Liaison between the oracles and core contracts
   - name: Spot
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Spotter
-      address: '0x54301c9E0c8728e9B2C2d2EF4052fa841F182617'
-      startBlock: 6678000
+      address: '{{ Spot.address }}'
+      startBlock: {{ Spot.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -168,11 +168,11 @@ dataSources:
   # Surplus Auction
   - name: Flap
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Flapper
-      address: '0x66cfE4CC02505f2BB19C5147A68F376E5F92f798'
-      startBlock: 6678000
+      address: '{{ Flap.address }}'
+      startBlock: {{ Flap.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -228,11 +228,11 @@ dataSources:
   #  Liquidation Module
   - name: Dog
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Dog
-      address: '0x85D5AFA199d212189fb4ed397245f93fA4514D27'
-      startBlock: 6678000
+      address: '{{ Dog.address }}'
+      startBlock: {{ Dog.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -269,11 +269,11 @@ dataSources:
   # Debt Auction
   - name: Flop
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Flopper
-      address: '0x53EEc18c7178f1317d8D7DFc124f37Ed3ba36769'
-      startBlock: 6678000
+      address: '{{ Flop.address }}'
+      startBlock: {{ Flop.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -330,11 +330,11 @@ dataSources:
   # Balance Sheet
   - name: Vow
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Vow
-      address: '0xd3563E656734650251556E7604dd24C3da9342B3'
-      startBlock: 6678000
+      address: '{{ Vow.address }}'
+      startBlock: {{ Vow.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -401,11 +401,11 @@ dataSources:
   # Accumulation of Stability Fees for collateral types
   - name: Jug
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Jug
-      address: '0xDC1De048663D0B9861AB145335B30b6A779904c2'
-      startBlock: 6678000
+      address: '{{ Jug.address }}'
+      startBlock: {{ Jug.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -452,11 +452,11 @@ dataSources:
   # Dai Savings Rate
   - name: Pot
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Pot
-      address: '0xD750E54469D3394aFC00534EF937Ac0AD5b3bF24'
-      startBlock: 6678000
+      address: '{{ Pot.address }}'
+      startBlock: {{ Pot.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -509,11 +509,11 @@ dataSources:
   # Mkr
   - name: DSToken
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: DSToken
-      address: '0xa1A07333CAfDFCaF5767961B2e2ac1d108e0e7A3'
-      startBlock: 6678000
+      address: '{{ DSToken.address }}'
+      startBlock: {{ DSToken.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -545,11 +545,11 @@ dataSources:
   # Used to deploy new user proxy instances
   - name: ProxyFactory
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: DSProxyFactory
-      address: '0x5ABCD00d86e94F9A7536a3387290409758F5797E'
-      startBlock: 6678000
+      address: '{{ DSProxyFactory.address }}'
+      startBlock: {{ DSProxyFactory.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -571,11 +571,11 @@ dataSources:
   # Allow users to interact with their Vaults in an easy way, treating them as non-fungible tokens (NFTs)
   - name: CdpManager
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: DssCdpManager
-      address: '0x90A142cc184d22C662f157e5dF0A0665ED73e17E'
-      startBlock: 6678000
+      address: '{{ CdpManager.address }}'
+      startBlock: {{ CdpManager.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -606,11 +606,11 @@ dataSources:
   #
   - name: Dai
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
-      address: '0xd3EbE14668bDa053605339B76996955d942b8B74'
+      address: '{{ Dai.address }}'
       abi: Dai
-      startBlock: 6678000
+      startBlock: {{ Dai.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -636,11 +636,11 @@ dataSources:
   # Auction Initiation from Liquidation
   - name: Clipper
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: Clipper
-      address: '0x8D6e0Ca5ab28bbCF17AAeCB6E4b0EE34C9Ec6035'
-      startBlock: 6678000
+      address: '{{ Clipper.address }}'
+      startBlock: {{ Clipper.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -674,11 +674,11 @@ dataSources:
   # Auction Initiation from Liquidation
   - name: StairstepExponentialDecrease
     kind: ethereum/contract
-    network: goerli
+    network: {{ network }}
     source:
       abi: StairstepExponentialDecrease
-      address: '0x0b588100265E36A92FFDb63F6016AFC487C99DB2'
-      startBlock: 6678000
+      address: '{{ StairstepExponentialDecrease.address }}'
+      startBlock: {{ StairstepExponentialDecrease.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
