@@ -238,8 +238,8 @@ export function handleFrob(event: LogNote): void {
       // Register new unmanaged vault
       vault = new Vault(urn.toHexString() + '-' + collateralType.id)
       vault.collateralType = collateralType.id
-      vault.collateral = decimal.ZERO
-      vault.debt = decimal.ZERO
+      vault.collateral = vault.collateral.plus(Δcollateral)
+      vault.debt = vault.debt.plus(Δdebt)
       vault.handler = urn
       vault.owner = owner.id
 
@@ -374,7 +374,8 @@ export function handleFork(event: LogNote): void {
       .concat(ilk),
   )
 
-  if (vault1 || vault2) {
+  let collateralType = CollateralType.load(ilk)
+  if (collateralType) {
     if (vault1) {
       vault1.collateral = vault1.collateral.minus(units.fromWad(dink))
       vault1.debt = vault1.debt.minus(units.fromWad(dart))
@@ -384,8 +385,45 @@ export function handleFork(event: LogNote): void {
       vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
       vault2.debt = vault2.debt.plus(units.fromWad(dart))
       vault2.save()
-    }
+    } else {
+      let owner = users.getOrCreateUser(dst)
+      owner.vaultCount = owner.vaultCount.plus(integer.ONE)
+      owner.save()
 
+      vault2 = new Vault(dst
+        .toHexString()
+        .concat('-')
+        .concat(ilk),
+      )
+      vault2.collateralType = collateralType.id
+      vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
+      vault2.debt = vault2.debt.plus(units.fromWad(dart))
+      vault2.handler = dst
+      vault2.owner = owner.id
+      vault2.openedAt = event.block.timestamp
+      vault2.openedAtBlock = event.block.number
+      vault2.openedAtTransaction = event.transaction.hash
+
+      collateralType.unmanagedVaultCount = collateralType.unmanagedVaultCount.plus(integer.ONE)
+      collateralType.save()
+
+      // update system
+      let system = systemModule.getSystemState(event)
+      system.unmanagedVaultCount = system.unmanagedVaultCount.plus(integer.ONE)
+      system.save()
+
+      // Log vault creation
+      let vaultCreationLog = new VaultCreationLog(
+        event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-0',
+      )
+      vaultCreationLog.vault = vault2.id
+      vaultCreationLog.block = event.block.number
+      vaultCreationLog.timestamp = event.block.timestamp
+      vaultCreationLog.transaction = event.transaction.hash
+      vaultCreationLog.save()
+
+      vault2.save()
+    }
     let log = new VaultSplitChangeLog(event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-3')
     log.src = src
     log.dst = dst
