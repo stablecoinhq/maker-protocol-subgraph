@@ -548,8 +548,8 @@ dataSources:
     network: {{ network }}
     source:
       abi: DSProxyFactory
-      address: '{{ DSProxyFactory.address }}'
-      startBlock: {{ DSProxyFactory.startBlock }}
+      address: '{{ ProxyFactory.address }}'
+      startBlock: {{ ProxyFactory.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
