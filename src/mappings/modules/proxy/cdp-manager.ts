@@ -45,6 +45,7 @@ export function handleOpen(event: NewCdp): void {
     log.block = event.block.number
     log.timestamp = event.block.timestamp
     log.transaction = event.transaction.hash
+    log.rate = collateral.rate
 
     log.save()
   }
@@ -65,8 +66,9 @@ export function handleGive(event: LogNote): void {
   let urn = manager.urns(cdp)
 
   let vault = Vault.load(urn.toHexString() + '-' + ilk.toString())
+  let collateralType = CollateralType.load(ilk.toString())
 
-  if (vault != null) {
+  if (collateralType != null && vault != null) {
     let previousOwner = users.getOrCreateUser(Address.fromString(vault.owner))
     let nextOwner = users.getOrCreateUser(dst)
 
@@ -89,6 +91,7 @@ export function handleGive(event: LogNote): void {
     log.block = event.block.number
     log.timestamp = event.block.timestamp
     log.transaction = event.transaction.hash
+    log.rate = collateralType.rate
 
     log.save()
   }

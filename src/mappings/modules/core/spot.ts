@@ -84,7 +84,7 @@ export function handlePoke(event: Poke): void {
     collateral.save()
 
     let log = new CollateralPriceUpdateLog(event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-1')
-    log.collateral = ilk
+    log.collateral = collateral.id
     log.newValue = value
     log.newSpotPrice = spotPrice
 

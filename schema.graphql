@@ -581,6 +581,7 @@ interface VaultLog {
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
+  rate: BigDecimal!
 }
 
 type VaultCreationLog implements VaultLog @entity {
@@ -589,6 +590,7 @@ type VaultCreationLog implements VaultLog @entity {
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
+  rate: BigDecimal!
 }
 
 type VaultCollateralChangeLog implements VaultLog @entity {
@@ -600,6 +602,7 @@ type VaultCollateralChangeLog implements VaultLog @entity {
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
+  rate: BigDecimal!
 }
 
 type VaultDebtChangeLog implements VaultLog @entity {
@@ -611,6 +614,7 @@ type VaultDebtChangeLog implements VaultLog @entity {
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
+  rate: BigDecimal!
 }
 
 type VaultSplitChangeLog implements VaultLog @entity {
@@ -623,6 +627,7 @@ type VaultSplitChangeLog implements VaultLog @entity {
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
+  rate: BigDecimal!
 }
 
 type VaultTransferChangeLog implements VaultLog @entity {
@@ -633,6 +638,7 @@ type VaultTransferChangeLog implements VaultLog @entity {
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
+  rate: BigDecimal!
 }
 
 interface CollateralLog {

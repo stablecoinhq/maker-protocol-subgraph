@@ -260,6 +260,7 @@ export function handleFrob(event: LogNote): void {
       vaultCreationLog.block = event.block.number
       vaultCreationLog.timestamp = event.block.timestamp
       vaultCreationLog.transaction = event.transaction.hash
+      vaultCreationLog.rate = collateralType.rate
 
       vaultCreationLog.save()
     } else {
@@ -288,6 +289,7 @@ export function handleFrob(event: LogNote): void {
         vaultCollateralChangeLog.block = event.block.number
         vaultCollateralChangeLog.timestamp = event.block.timestamp
         vaultCollateralChangeLog.transaction = event.transaction.hash
+        vaultCollateralChangeLog.rate = collateralType.rate
 
         vaultCollateralChangeLog.save()
       }
@@ -304,6 +306,7 @@ export function handleFrob(event: LogNote): void {
         vaultDebtChangeLog.block = event.block.number
         vaultDebtChangeLog.timestamp = event.block.timestamp
         vaultDebtChangeLog.transaction = event.transaction.hash
+        vaultDebtChangeLog.rate = collateralType.rate
 
         vaultDebtChangeLog.save()
       }
@@ -420,6 +423,7 @@ export function handleFork(event: LogNote): void {
       vaultCreationLog.block = event.block.number
       vaultCreationLog.timestamp = event.block.timestamp
       vaultCreationLog.transaction = event.transaction.hash
+      vaultCreationLog.rate = collateralType.rate
       vaultCreationLog.save()
 
       vault2.save()
@@ -437,6 +441,7 @@ export function handleFork(event: LogNote): void {
     log.block = event.block.number
     log.timestamp = event.block.timestamp
     log.transaction = event.transaction.hash
+    log.rate = collateralType.rate
     log.save()
   }
 }
@@ -555,7 +560,7 @@ export function handleFold(event: LogNote): void {
   let rate = units.fromRad(bytes.toSignedInt(event.params.arg3))
 
   let collateral = CollateralType.load(ilk)
-  let user = User.load(userAddress.toHexString())
+  let user = users.getOrCreateUser(userAddress)
 
   if (collateral && user) {
     let rad = collateral.totalDebt.times(rate)
