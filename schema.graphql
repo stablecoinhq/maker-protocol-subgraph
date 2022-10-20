@@ -832,3 +832,20 @@ type SaleAuction @entity {
   " Clipper cpntract addres "
   clipperContract: Bytes!
 }
+
+interface CollateralTypeLog {
+  id: ID!
+  collateral: Collateral!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+}
+
+type CollateralTypeChangeLog implements CollateralTypeLog @entity {
+  id: ID!
+  collateral: Collateral!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+  mat: BigDecimal!
+}

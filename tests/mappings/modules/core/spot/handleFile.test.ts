@@ -37,6 +37,7 @@ test('Spot#handleFile updates CollateralType.liquidationRatio when signature is 
   handleFile(event)
 
   assert.fieldEquals('CollateralType', ilk, 'liquidationRatio', '25165824')
+  assert.fieldEquals('CollateralTypeChangeLog', ilk, 'mat', '25165824')
 })
 
 test('Spot#handleFile creates SpotParLog when signature is 0x29ae8114 and what is par', () => {
