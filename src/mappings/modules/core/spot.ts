@@ -34,7 +34,7 @@ export function handleFile(event: LogNote): void {
       let state = system.getSystemState(event)
       state.save()
 
-      let collateralTypeChangeLog = new CollateralTypeChangeLog(ilk)
+      let collateralTypeChangeLog = new CollateralTypeChangeLog(event.transaction.hash.toHex() + '-' + event.logIndex.toString())
       collateralTypeChangeLog.block = event.block.number
       collateralTypeChangeLog.timestamp = event.block.timestamp
       collateralTypeChangeLog.transaction = event.transaction.hash
