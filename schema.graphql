@@ -835,7 +835,7 @@ type SaleAuction @entity {
 
 interface CollateralTypeLog {
   id: ID!
-  collateral: Collateral!
+  collateralType: CollateralType!
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
@@ -843,7 +843,7 @@ interface CollateralTypeLog {
 
 type CollateralTypeChangeLog implements CollateralTypeLog @entity {
   id: ID!
-  collateral: Collateral!
+  collateralType: CollateralType!
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!

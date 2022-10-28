@@ -38,7 +38,7 @@ export function handleFile(event: LogNote): void {
       collateralTypeChangeLog.block = event.block.number
       collateralTypeChangeLog.timestamp = event.block.timestamp
       collateralTypeChangeLog.transaction = event.transaction.hash
-      collateralTypeChangeLog.collateral = collateralType.id
+      collateralTypeChangeLog.collateralType = collateralType.id
       collateralTypeChangeLog.mat = collateralType.liquidationRatio
       collateralTypeChangeLog.save()
     }
