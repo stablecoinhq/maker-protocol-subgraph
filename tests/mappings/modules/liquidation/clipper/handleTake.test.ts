@@ -21,8 +21,8 @@ describe('Clipper#handleTake', () => {
       let max = BigInt.fromString('10000000000000000000000000000') // 10 ray
       let price = BigInt.fromString('11000000000000000000000000000') // 11 ray
       let owe = BigInt.fromString('1000000000000000000000000000') // 1 ray
-      let tab = BigInt.fromString('0') // 0 rad
-      let lot = BigInt.fromString('101000000000000000000') // 101 wad
+      let tab = BigInt.fromString('5000000000000000000000000000000000000000000000') // 5 rad
+      let lot = BigInt.fromString('0') // 0 wad
       let usr = Address.fromString('0x0000000000000000000000000000000000001111')
       let event = changetype<TakeEvent>(
         tests.helpers.events.getNewEvent([

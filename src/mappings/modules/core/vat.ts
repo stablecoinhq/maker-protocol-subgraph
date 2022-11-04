@@ -264,8 +264,6 @@ export function handleFrob(event: LogNote): void {
 
       vaultCreationLog.save()
     } else {
-      let previousCollateral = vault.collateral
-      let previousDebt = vault.debt
 
       // Update existing Vault
       vault.collateral = vault.collateral.plus(Δcollateral)
@@ -277,39 +275,42 @@ export function handleFrob(event: LogNote): void {
       vault.updatedAtBlock = event.block.number
       vault.updatedAtTransaction = event.transaction.hash
 
-      if (!Δcollateral.equals(decimal.ZERO)) {
-        let vaultCollateralChangeLog = new VaultCollateralChangeLog(
-          event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-1',
-        )
-        vaultCollateralChangeLog.vault = vault.id
-        vaultCollateralChangeLog.collateralBefore = previousCollateral
-        vaultCollateralChangeLog.collateralAfter = vault.collateral
-        vaultCollateralChangeLog.collateralDiff = Δcollateral
+    }
+    let previousCollateral = vault.collateral
+    let previousDebt = vault.debt
 
-        vaultCollateralChangeLog.block = event.block.number
-        vaultCollateralChangeLog.timestamp = event.block.timestamp
-        vaultCollateralChangeLog.transaction = event.transaction.hash
-        vaultCollateralChangeLog.rate = collateralType.rate
+    if (!Δcollateral.equals(decimal.ZERO)) {
+      let vaultCollateralChangeLog = new VaultCollateralChangeLog(
+        event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-1',
+      )
+      vaultCollateralChangeLog.vault = vault.id
+      vaultCollateralChangeLog.collateralBefore = previousCollateral
+      vaultCollateralChangeLog.collateralAfter = vault.collateral
+      vaultCollateralChangeLog.collateralDiff = Δcollateral
 
-        vaultCollateralChangeLog.save()
-      }
+      vaultCollateralChangeLog.block = event.block.number
+      vaultCollateralChangeLog.timestamp = event.block.timestamp
+      vaultCollateralChangeLog.transaction = event.transaction.hash
+      vaultCollateralChangeLog.rate = collateralType.rate
 
-      if (!Δdebt.equals(decimal.ZERO)) {
-        let vaultDebtChangeLog = new VaultDebtChangeLog(
-          event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-2',
-        )
-        vaultDebtChangeLog.vault = vault.id
-        vaultDebtChangeLog.debtBefore = previousDebt
-        vaultDebtChangeLog.debtAfter = vault.debt
-        vaultDebtChangeLog.debtDiff = Δdebt
+      vaultCollateralChangeLog.save()
+    }
 
-        vaultDebtChangeLog.block = event.block.number
-        vaultDebtChangeLog.timestamp = event.block.timestamp
-        vaultDebtChangeLog.transaction = event.transaction.hash
-        vaultDebtChangeLog.rate = collateralType.rate
+    if (!Δdebt.equals(decimal.ZERO)) {
+      let vaultDebtChangeLog = new VaultDebtChangeLog(
+        event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-2',
+      )
+      vaultDebtChangeLog.vault = vault.id
+      vaultDebtChangeLog.debtBefore = previousDebt
+      vaultDebtChangeLog.debtAfter = vault.debt
+      vaultDebtChangeLog.debtDiff = Δdebt
 
-        vaultDebtChangeLog.save()
-      }
+      vaultDebtChangeLog.block = event.block.number
+      vaultDebtChangeLog.timestamp = event.block.timestamp
+      vaultDebtChangeLog.transaction = event.transaction.hash
+      vaultDebtChangeLog.rate = collateralType.rate
+
+      vaultDebtChangeLog.save()
     }
 
     let collateralOwner = users.getOrCreateUser(v)

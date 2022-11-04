@@ -119,13 +119,23 @@
             "startBlock": "8928158"
         }
     },
-    "Clipper": {
+    "ClipperEth": {
         "goerli": {
             "address": "0x8D6e0Ca5ab28bbCF17AAeCB6E4b0EE34C9Ec6035",
             "startBlock": "6678000"
         },
         "mainnet": {
             "address": "0xc67963a226eddd77B91aD8c421630A1b0AdFF270",
+            "startBlock": "12329686"
+        }
+    },
+    "ClipperFau": {
+        "goerli": {
+            "address": "0xc45A29d6B2585B270a4A2221A94d44254C8FE756",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0xc45A29d6B2585B270a4A2221A94d44254C8FE756",
             "startBlock": "12329686"
         }
     },
