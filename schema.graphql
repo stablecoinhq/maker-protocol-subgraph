@@ -815,6 +815,8 @@ type SaleAuction @entity {
   userExcessCollateral: User!
   " User where DAI incentives will be sent [kpr in SmartContract]"
   userIncentives: User!
+  " User who bids the auction"
+  userTaker: Bytes!
   " Auction inicial price [top in SmartContract]"
   startingPrice: BigDecimal!
   " Auction start time [tic in SmartContract]"

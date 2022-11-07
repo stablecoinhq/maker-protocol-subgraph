@@ -1,4 +1,4 @@
-import { BigDecimal } from '@graphprotocol/graph-ts'
+import { BigDecimal, Bytes } from '@graphprotocol/graph-ts'
 import { units } from '@protofire/subgraph-toolkit'
 import {
   Kick as KickEvent,
@@ -9,7 +9,7 @@ import {
   File1 as FileAddressEvent,
 } from '../../../../generated/Clipper/Clipper'
 import { SaleAuction } from '../../../../generated/schema'
-import { saleAuctions, system as systemModule } from '../../../entities'
+import { saleAuctions, system as systemModule, users } from '../../../entities'
 
 export function handleFile1(event: FileBigIntEvent): void {
   let what = event.params.what.toString()
@@ -65,6 +65,7 @@ export function handleKick(event: KickEvent): void {
   saleAuction.userIncentives = kpr
   saleAuction.startingPrice = top
   saleAuction.isActive = true
+  saleAuction.userTaker = new Bytes(0)
 
   saleAuction.save()
 
@@ -95,6 +96,7 @@ export function handleTake(event: TakeEvent): void {
 
     saleAuction.boughtAt = event.block.timestamp
     saleAuction.updatedAt = event.block.timestamp
+    saleAuction.userTaker = users.getOrCreateUser(event.transaction.from).address
     saleAuction.save()
   }
 }

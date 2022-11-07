@@ -103,11 +103,15 @@ describe('Clipper#handleTake', () => {
       event.block.timestamp = BigInt.fromI32(1001)
 
       handleTake(event)
+      // default address internally used by matchstick framework
+      // https://github.com/LimeChain/matchstick-as/blob/ce1cb9dfb7c3ed3d60eef5a3ef3134798fe71364/assembly/defaults.ts#L3
+      let senderAddress = '0xa16081f360e3847006db660bae1c6d1b2e17ec2a'
 
       assert.fieldEquals('SaleAuction', id.toString(), 'amountDaiToRaise', '5')
       assert.fieldEquals('SaleAuction', id.toString(), 'amountCollateralToSell', '101')
       assert.fieldEquals('SaleAuction', id.toString(), 'updatedAt', '1001')
       assert.fieldEquals('SaleAuction', id.toString(), 'boughtAt', '1001')
+      assert.fieldEquals('SaleAuction', id.toString(), 'userTaker', senderAddress)
     })
   })
 
