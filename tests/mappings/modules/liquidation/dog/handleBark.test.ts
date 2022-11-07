@@ -45,6 +45,7 @@ describe('Dog#handleBark', () => {
 
     assert.fieldEquals('SaleAuction', id.toString(), 'vault', urn + '-' + ilk.toString())
     assert.fieldEquals('SaleAuction', id.toString(), 'collateralType', ilk.toString())
+    assert.fieldEquals('SaleAuction', id.toString(), 'startedAt', "1001")
 
     assert.fieldEquals('CollateralType', ilk, 'daiAmountToCoverDebtAndFees', '200')
 

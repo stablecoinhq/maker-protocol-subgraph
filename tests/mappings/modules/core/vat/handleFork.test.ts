@@ -34,6 +34,7 @@ describe('Vat#handleFork', () => {
     let dart = Bytes.fromUint8Array(Bytes.fromBigInt(BigInt.fromString('200500000000000000000')).reverse())
 
     let collateralType = new CollateralType(collateralTypeId)
+    collateralType.rate = BigDecimal.fromString('1.01')
     collateralType.save()
 
     let vault1Id = src.concat('-').concat(collateralTypeId)
@@ -61,6 +62,7 @@ describe('Vat#handleFork', () => {
     assert.fieldEquals('VaultSplitChangeLog', vaultSplitChangeLogId, 'collateralToMove', '100.5')
     assert.fieldEquals('VaultSplitChangeLog', vaultSplitChangeLogId, 'debtToMove', '200.5')
     assert.fieldEquals('VaultSplitChangeLog', vaultSplitChangeLogId, 'vault', vault1.id)
+    assert.fieldEquals('VaultSplitChangeLog', vaultSplitChangeLogId, 'rate', "1.01")
 
     assert.fieldEquals('Vault', vault1Id, 'collateral', '899.5')
     assert.fieldEquals('Vault', vault1Id, 'debt', '799.5')

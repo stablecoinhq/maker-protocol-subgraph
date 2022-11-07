@@ -116,6 +116,16 @@ describe('Vat#handleFrob', () => {
 
         assert.fieldEquals('User', w, 'totalVaultDai', '300.75')
         assert.fieldEquals('Collateral', collateralId, 'amount', '-100.5')
+
+        // VaultCreationLog is not created
+        const vaultCreationLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-0';
+        assert.notInStore('VaultCreationLog', vaultCreationLogId)
+        // vaultCollateralChangeLog is created
+        const vaultCollateralChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-1';
+        assert.fieldEquals('VaultCollateralChangeLog', vaultCollateralChangeLogId, 'collateralDiff', '100.5')
+        // vaultDebtChangeLog is created
+        const vaultDebtChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-2';
+        assert.fieldEquals('VaultDebtChangeLog', vaultDebtChangeLogId, 'debtDiff', '200.5')
       })
     })
 
@@ -137,8 +147,8 @@ describe('Vat#handleFrob', () => {
 
         // test vault created from collateralType
         assert.fieldEquals('Vault', vaultId, 'collateralType', collateralTypeId)
-        assert.fieldEquals('Vault', vaultId, 'collateral', decimal.ZERO.toString())
-        assert.fieldEquals('Vault', vaultId, 'debt', decimal.ZERO.toString())
+        assert.fieldEquals('Vault', vaultId, 'collateral', "100.5")
+        assert.fieldEquals('Vault', vaultId, 'debt', "200.5")
         assert.fieldEquals('Vault', vaultId, 'owner', urnId)
         assert.fieldEquals('Vault', vaultId, 'handler', urnId)
         assert.fieldEquals('Vault', vaultId, 'openedAt', event.block.timestamp.toString())
@@ -167,6 +177,16 @@ describe('Vat#handleFrob', () => {
             .toString(),
         )
         assert.fieldEquals('CollateralType', collateralTypeId, 'unmanagedVaultCount', integer.ONE.toString())
+
+        // VaultCreationLog is created
+        const vaultCreationLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-0';
+        assert.fieldEquals('VaultCreationLog', vaultCreationLogId, "transaction", event.transaction.hash.toHexString())
+        // vaultCollateralChangeLog is created
+        const vaultCollateralChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-1';
+        assert.fieldEquals('VaultCollateralChangeLog', vaultCollateralChangeLogId, 'collateralDiff', '100.5')
+        // vaultDebtChangeLog is created
+        const vaultDebtChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-2';
+        assert.fieldEquals('VaultDebtChangeLog', vaultDebtChangeLogId, 'debtDiff', '200.5')
       })
     })
   })

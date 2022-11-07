@@ -238,8 +238,8 @@ export function handleFrob(event: LogNote): void {
       // Register new unmanaged vault
       vault = new Vault(urn.toHexString() + '-' + collateralType.id)
       vault.collateralType = collateralType.id
-      vault.collateral = decimal.ZERO
-      vault.debt = decimal.ZERO
+      vault.collateral = vault.collateral.plus(Δcollateral)
+      vault.debt = vault.debt.plus(Δdebt)
       vault.handler = urn
       vault.owner = owner.id
 
@@ -260,11 +260,10 @@ export function handleFrob(event: LogNote): void {
       vaultCreationLog.block = event.block.number
       vaultCreationLog.timestamp = event.block.timestamp
       vaultCreationLog.transaction = event.transaction.hash
+      vaultCreationLog.rate = collateralType.rate
 
       vaultCreationLog.save()
     } else {
-      let previousCollateral = vault.collateral
-      let previousDebt = vault.debt
 
       // Update existing Vault
       vault.collateral = vault.collateral.plus(Δcollateral)
@@ -276,37 +275,42 @@ export function handleFrob(event: LogNote): void {
       vault.updatedAtBlock = event.block.number
       vault.updatedAtTransaction = event.transaction.hash
 
-      if (!Δcollateral.equals(decimal.ZERO)) {
-        let vaultCollateralChangeLog = new VaultCollateralChangeLog(
-          event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-1',
-        )
-        vaultCollateralChangeLog.vault = vault.id
-        vaultCollateralChangeLog.collateralBefore = previousCollateral
-        vaultCollateralChangeLog.collateralAfter = vault.collateral
-        vaultCollateralChangeLog.collateralDiff = Δcollateral
+    }
+    let previousCollateral = vault.collateral
+    let previousDebt = vault.debt
 
-        vaultCollateralChangeLog.block = event.block.number
-        vaultCollateralChangeLog.timestamp = event.block.timestamp
-        vaultCollateralChangeLog.transaction = event.transaction.hash
+    if (!Δcollateral.equals(decimal.ZERO)) {
+      let vaultCollateralChangeLog = new VaultCollateralChangeLog(
+        event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-1',
+      )
+      vaultCollateralChangeLog.vault = vault.id
+      vaultCollateralChangeLog.collateralBefore = previousCollateral
+      vaultCollateralChangeLog.collateralAfter = vault.collateral
+      vaultCollateralChangeLog.collateralDiff = Δcollateral
 
-        vaultCollateralChangeLog.save()
-      }
+      vaultCollateralChangeLog.block = event.block.number
+      vaultCollateralChangeLog.timestamp = event.block.timestamp
+      vaultCollateralChangeLog.transaction = event.transaction.hash
+      vaultCollateralChangeLog.rate = collateralType.rate
 
-      if (!Δdebt.equals(decimal.ZERO)) {
-        let vaultDebtChangeLog = new VaultDebtChangeLog(
-          event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-2',
-        )
-        vaultDebtChangeLog.vault = vault.id
-        vaultDebtChangeLog.debtBefore = previousDebt
-        vaultDebtChangeLog.debtAfter = vault.debt
-        vaultDebtChangeLog.debtDiff = Δdebt
+      vaultCollateralChangeLog.save()
+    }
 
-        vaultDebtChangeLog.block = event.block.number
-        vaultDebtChangeLog.timestamp = event.block.timestamp
-        vaultDebtChangeLog.transaction = event.transaction.hash
+    if (!Δdebt.equals(decimal.ZERO)) {
+      let vaultDebtChangeLog = new VaultDebtChangeLog(
+        event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-2',
+      )
+      vaultDebtChangeLog.vault = vault.id
+      vaultDebtChangeLog.debtBefore = previousDebt
+      vaultDebtChangeLog.debtAfter = vault.debt
+      vaultDebtChangeLog.debtDiff = Δdebt
 
-        vaultDebtChangeLog.save()
-      }
+      vaultDebtChangeLog.block = event.block.number
+      vaultDebtChangeLog.timestamp = event.block.timestamp
+      vaultDebtChangeLog.transaction = event.transaction.hash
+      vaultDebtChangeLog.rate = collateralType.rate
+
+      vaultDebtChangeLog.save()
     }
 
     let collateralOwner = users.getOrCreateUser(v)
@@ -374,23 +378,71 @@ export function handleFork(event: LogNote): void {
       .concat(ilk),
   )
 
-  if (vault1 && vault2) {
-    vault1.collateral = vault1.collateral.minus(units.fromWad(dink))
-    vault1.debt = vault1.debt.minus(units.fromWad(dart))
-    vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
-    vault2.debt = vault2.debt.plus(units.fromWad(dart))
-    vault1.save()
-    vault2.save()
+  let collateralType = CollateralType.load(ilk)
+  if (collateralType) {
+    if (vault1) {
+      vault1.collateral = vault1.collateral.minus(units.fromWad(dink))
+      vault1.debt = vault1.debt.minus(units.fromWad(dart))
+      vault1.save()
+    }
+    if (vault2) {
+      vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
+      vault2.debt = vault2.debt.plus(units.fromWad(dart))
+      vault2.save()
+    } else {
+      let owner = users.getOrCreateUser(dst)
+      owner.vaultCount = owner.vaultCount.plus(integer.ONE)
+      owner.save()
 
+      vault2 = new Vault(dst
+        .toHexString()
+        .concat('-')
+        .concat(ilk),
+      )
+      vault2.collateralType = collateralType.id
+      vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
+      vault2.debt = vault2.debt.plus(units.fromWad(dart))
+      vault2.handler = dst
+      vault2.owner = owner.id
+      vault2.openedAt = event.block.timestamp
+      vault2.openedAtBlock = event.block.number
+      vault2.openedAtTransaction = event.transaction.hash
+
+      collateralType.unmanagedVaultCount = collateralType.unmanagedVaultCount.plus(integer.ONE)
+      collateralType.save()
+
+      // update system
+      let system = systemModule.getSystemState(event)
+      system.unmanagedVaultCount = system.unmanagedVaultCount.plus(integer.ONE)
+      system.save()
+
+      // Log vault creation
+      let vaultCreationLog = new VaultCreationLog(
+        event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-0',
+      )
+      vaultCreationLog.vault = vault2.id
+      vaultCreationLog.block = event.block.number
+      vaultCreationLog.timestamp = event.block.timestamp
+      vaultCreationLog.transaction = event.transaction.hash
+      vaultCreationLog.rate = collateralType.rate
+      vaultCreationLog.save()
+
+      vault2.save()
+    }
     let log = new VaultSplitChangeLog(event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-3')
     log.src = src
     log.dst = dst
-    log.vault = vault1.id
+    if (vault1) {
+      log.vault = vault1.id
+    } else if (vault2) {
+      log.vault = vault2.id
+    }
     log.collateralToMove = units.fromWad(dink)
     log.debtToMove = units.fromWad(dart)
     log.block = event.block.number
     log.timestamp = event.block.timestamp
     log.transaction = event.transaction.hash
+    log.rate = collateralType.rate
     log.save()
   }
 }
@@ -509,7 +561,7 @@ export function handleFold(event: LogNote): void {
   let rate = units.fromRad(bytes.toSignedInt(event.params.arg3))
 
   let collateral = CollateralType.load(ilk)
-  let user = User.load(userAddress.toHexString())
+  let user = users.getOrCreateUser(userAddress)
 
   if (collateral && user) {
     let rad = collateral.totalDebt.times(rate)

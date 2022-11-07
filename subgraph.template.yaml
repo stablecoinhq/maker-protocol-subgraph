@@ -12,11 +12,11 @@ dataSources:
   # Vault Engine
   - name: Vat
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Vat
-      address: '0x35d1b3f3d7966a1dfe207aa4514c12a259a0492b'
-      startBlock: 8928152
+      address: '{{ Vat.address }}'
+      startBlock: {{ Vat.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -113,11 +113,11 @@ dataSources:
   #  Liaison between the oracles and core contracts
   - name: Spot
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Spotter
-      address: '0x65c79fcb50ca1594b025960e539ed7a9a6d434a3'
-      startBlock: 8928152
+      address: '{{ Spot.address }}'
+      startBlock: {{ Spot.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -168,11 +168,11 @@ dataSources:
   # Surplus Auction
   - name: Flap
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Flapper
-      address: '0xdfe0fb1be2a52cdbf8fb962d5701d7fd0902db9f'
-      startBlock: 8928163
+      address: '{{ Flap.address }}'
+      startBlock: {{ Flap.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -228,11 +228,11 @@ dataSources:
   #  Liquidation Module
   - name: Dog
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Dog
-      address: '0x135954d155898D42C90D2a57824C690e0c7BEf1B'
-      startBlock: 12246358
+      address: '{{ Dog.address }}'
+      startBlock: {{ Dog.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -269,11 +269,11 @@ dataSources:
   # Debt Auction
   - name: Flop
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Flopper
-      address: '0x4d95a049d5b0b7d32058cd3f2163015747522e99'
-      startBlock: 9006717
+      address: '{{ Flop.address }}'
+      startBlock: {{ Flop.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -330,11 +330,11 @@ dataSources:
   # Balance Sheet
   - name: Vow
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Vow
-      address: '0xa950524441892a31ebddf91d3ceefa04bf454466'
-      startBlock: 8928163
+      address: '{{ Vow.address }}'
+      startBlock: {{ Vow.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -401,11 +401,11 @@ dataSources:
   # Accumulation of Stability Fees for collateral types
   - name: Jug
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Jug
-      address: '0x19c0976f590d67707e62397c87829d896dc0f1f1'
-      startBlock: 8928160
+      address: '{{ Jug.address }}'
+      startBlock: {{ Jug.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -452,11 +452,11 @@ dataSources:
   # Dai Savings Rate
   - name: Pot
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Pot
-      address: '0x197e90f9fad81970ba7976f33cbd77088e5d7cf7'
-      startBlock: 8928160
+      address: '{{ Pot.address }}'
+      startBlock: {{ Pot.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -509,11 +509,11 @@ dataSources:
   # Mkr
   - name: DSToken
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: DSToken
-      address: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2'
-      startBlock: 12805415
+      address: '{{ DSToken.address }}'
+      startBlock: {{ DSToken.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -545,11 +545,11 @@ dataSources:
   # Used to deploy new user proxy instances
   - name: ProxyFactory
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: DSProxyFactory
-      address: '0xa26e15c895efc0616177b7c1e7270a4c7d51c997'
-      startBlock: 5834580
+      address: '{{ ProxyFactory.address }}'
+      startBlock: {{ ProxyFactory.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -571,11 +571,11 @@ dataSources:
   # Allow users to interact with their Vaults in an easy way, treating them as non-fungible tokens (NFTs)
   - name: CdpManager
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: DssCdpManager
-      address: '0x5ef30b9986345249bc32d8928b7ee64de9435e39'
-      startBlock: 8928198
+      address: '{{ CdpManager.address }}'
+      startBlock: {{ CdpManager.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -606,11 +606,11 @@ dataSources:
   #
   - name: Dai
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
-      address: '0x6b175474e89094c44da98b954eedeac495271d0f'
+      address: '{{ Dai.address }}'
       abi: Dai
-      startBlock: 8928158
+      startBlock: {{ Dai.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -634,13 +634,47 @@ dataSources:
   # Liquidation Module
   #
   # Auction Initiation from Liquidation
-  - name: Clipper
+  - name: ClipperEth
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Clipper
-      address: '0xc67963a226eddd77B91aD8c421630A1b0AdFF270'
-      startBlock: 12329686
+      address: '{{ ClipperEth.address }}'
+      startBlock: {{ ClipperEth.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/modules/liquidation/clipper.ts
+      abis:
+        - name: Clipper
+          file: ./abis/Clipper.json
+        - name: Vat
+          file: ./abis/Vat.json
+      entities:
+        - SystemState
+        - SaleAuction
+      eventHandlers:
+        - event: File(indexed bytes32,uint256)
+          handler: handleFile1
+        - event: File(indexed bytes32,address)
+          handler: handleFile2
+        - event: Kick(indexed uint256,uint256,uint256,uint256,indexed address,indexed address,uint256)
+          handler: handleKick
+        - event: Redo(indexed uint256,uint256,uint256,uint256,indexed address,indexed address,uint256)
+          handler: handleRedo
+        - event: Take(indexed uint256,uint256,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleTake
+        - event: Yank(uint256)
+          handler: handleYank
+
+  - name: ClipperFau
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: Clipper
+      address: '{{ ClipperFau.address }}'
+      startBlock: {{ ClipperFau.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -674,11 +708,11 @@ dataSources:
   # Auction Initiation from Liquidation
   - name: StairstepExponentialDecrease
     kind: ethereum/contract
-    network: mainnet
+    network: {{ network }}
     source:
       abi: StairstepExponentialDecrease
-      address: '0x7d9f92DAa9254Bbd1f479DBE5058f74C2381A898'
-      startBlock: 12329765
+      address: '{{ StairstepExponentialDecrease.address }}'
+      startBlock: {{ StairstepExponentialDecrease.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

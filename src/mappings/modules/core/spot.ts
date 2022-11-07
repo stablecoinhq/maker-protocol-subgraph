@@ -9,6 +9,7 @@ import {
   SpotParLog,
   CollateralPriceUpdateLog,
   LiveChangeLog,
+  CollateralTypeChangeLog,
 } from '../../../../generated/schema'
 
 import { system } from '../../../entities'
@@ -32,6 +33,14 @@ export function handleFile(event: LogNote): void {
 
       let state = system.getSystemState(event)
       state.save()
+
+      let collateralTypeChangeLog = new CollateralTypeChangeLog(event.transaction.hash.toHex() + '-' + event.logIndex.toString())
+      collateralTypeChangeLog.block = event.block.number
+      collateralTypeChangeLog.timestamp = event.block.timestamp
+      collateralTypeChangeLog.transaction = event.transaction.hash
+      collateralTypeChangeLog.collateralType = collateralType.id
+      collateralTypeChangeLog.mat = collateralType.liquidationRatio
+      collateralTypeChangeLog.save()
     }
   } else if (what == 'pip') {
     let collateralType = CollateralType.load(ilk)
@@ -84,7 +93,7 @@ export function handlePoke(event: Poke): void {
     collateral.save()
 
     let log = new CollateralPriceUpdateLog(event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-1')
-    log.collateral = ilk
+    log.collateral = collateral.id
     log.newValue = value
     log.newSpotPrice = spotPrice
 

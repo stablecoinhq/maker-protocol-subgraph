@@ -1,0 +1,152 @@
+{
+    "Vat": {
+        "goerli": {
+            "address": "0x1b1FE236166eD0Ac829fa230afE38E61bC281C5e",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x35d1b3f3d7966a1dfe207aa4514c12a259a0492b",
+            "startBlock": "8928152"
+        }
+    },
+    "Spot": {
+        "goerli": {
+            "address": "0x54301c9E0c8728e9B2C2d2EF4052fa841F182617",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x65c79fcb50ca1594b025960e539ed7a9a6d434a3",
+            "startBlock": "8928152"
+        }
+    },
+    "Flap": {
+        "goerli": {
+            "address": "0x66cfE4CC02505f2BB19C5147A68F376E5F92f798",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0xdfe0fb1be2a52cdbf8fb962d5701d7fd0902db9f",
+            "startBlock": "8928163"
+        }
+    },
+    "Dog": {
+        "goerli": {
+            "address": "0x85D5AFA199d212189fb4ed397245f93fA4514D27",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x135954d155898D42C90D2a57824C690e0c7BEf1B",
+            "startBlock": "12246358"
+        }
+    },
+    "Flop": {
+        "goerli": {
+            "address": "0x53EEc18c7178f1317d8D7DFc124f37Ed3ba36769",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x4d95a049d5b0b7d32058cd3f2163015747522e99",
+            "startBlock": "9006717"
+        }
+    },
+    "Vow": {
+        "goerli": {
+            "address": "0xd3563E656734650251556E7604dd24C3da9342B3",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0xa950524441892a31ebddf91d3ceefa04bf454466",
+            "startBlock": "8928163"
+        }
+    },
+    "Jug": {
+        "goerli": {
+            "address": "0xDC1De048663D0B9861AB145335B30b6A779904c2",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x19c0976f590d67707e62397c87829d896dc0f1f1",
+            "startBlock": "8928160"
+        }
+    },
+    "Pot": {
+        "goerli": {
+            "address": "0xD750E54469D3394aFC00534EF937Ac0AD5b3bF24",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x197e90f9fad81970ba7976f33cbd77088e5d7cf7",
+            "startBlock": "8928160"
+        }
+    },
+    "DSToken": {
+        "goerli": {
+            "address": "0xa1A07333CAfDFCaF5767961B2e2ac1d108e0e7A3",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+            "startBlock": "12805415"
+        }
+    },
+    "ProxyFactory": {
+        "goerli": {
+            "address": "0x5ABCD00d86e94F9A7536a3387290409758F5797E",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0xa26e15c895efc0616177b7c1e7270a4c7d51c997",
+            "startBlock": "5834580"
+        }
+    },
+    "CdpManager": {
+        "goerli": {
+            "address": "0x90A142cc184d22C662f157e5dF0A0665ED73e17E",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x5ef30b9986345249bc32d8928b7ee64de9435e39",
+            "startBlock": "8928198"
+        }
+    },
+    "Dai": {
+        "goerli": {
+            "address": "0xd3EbE14668bDa053605339B76996955d942b8B74",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+            "startBlock": "8928158"
+        }
+    },
+    "ClipperEth": {
+        "goerli": {
+            "address": "0x8D6e0Ca5ab28bbCF17AAeCB6E4b0EE34C9Ec6035",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0xc67963a226eddd77B91aD8c421630A1b0AdFF270",
+            "startBlock": "12329686"
+        }
+    },
+    "ClipperFau": {
+        "goerli": {
+            "address": "0xc45A29d6B2585B270a4A2221A94d44254C8FE756",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0xc45A29d6B2585B270a4A2221A94d44254C8FE756",
+            "startBlock": "12329686"
+        }
+    },
+    "StairstepExponentialDecrease": {
+        "goerli": {
+            "address": "0x0b588100265E36A92FFDb63F6016AFC487C99DB2",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x7d9f92DAa9254Bbd1f479DBE5058f74C2381A898",
+            "startBlock": "12329765"
+        }
+    }
+}
