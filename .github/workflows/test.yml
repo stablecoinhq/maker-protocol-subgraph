@@ -15,4 +15,6 @@ jobs:
       with:
         node-version: '16.x'
     - run: yarn install
+    - run: yarn fix-network:goerli
+    - run: yarn codegen && yarn build
     - run: yarn run test
