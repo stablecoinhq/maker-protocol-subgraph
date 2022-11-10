@@ -2,7 +2,7 @@ import { BigDecimal } from '@graphprotocol/graph-ts'
 import { bytes, units } from '@protofire/subgraph-toolkit'
 import { VowFlapLog, VowFlopLog } from '../../../../generated/schema'
 import { LogNote, Vow } from '../../../../generated/Vow/Vow'
-import { system as systemModule } from '../../../entities'
+import { system as systemModule, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 import { Address } from '@graphprotocol/graph-ts'
 import { LiveChangeLog, PushDebtQueueLog, PopDebtQueueLog } from '../../../../generated/schema'
 
@@ -16,14 +16,24 @@ export function handleFile(event: LogNote): void {
     let data = bytes.toUnsignedInt(event.params.arg2)
     if (what == 'wait') {
       system.debtAuctionDelay = data
+      changeLogs.createProtocolParameterChangeLog(event, "VOW", what, "",
+        new changeLogs.ProtocolParameterValueBigInt(data))
     } else if (what == 'bump') {
       system.surplusAuctionLotSize = units.fromRad(data)
+      changeLogs.createProtocolParameterChangeLog(event, "VOW", what, "",
+        new changeLogs.ProtocolParameterValueBigDecimal(units.fromRad(data)))
     } else if (what == 'sump') {
       system.debtAuctionBidSize = units.fromRad(data)
+      changeLogs.createProtocolParameterChangeLog(event, "VOW", what, "",
+        new changeLogs.ProtocolParameterValueBigDecimal(units.fromRad(data)))
     } else if (what == 'dump') {
       system.debtAuctionInitialLotSize = units.fromWad(data)
+      changeLogs.createProtocolParameterChangeLog(event, "VOW", what, "",
+        new changeLogs.ProtocolParameterValueBigDecimal(units.fromWad(data)))
     } else if (what == 'hump') {
       system.surplusAuctionBuffer = units.fromRad(data)
+      changeLogs.createProtocolParameterChangeLog(event, "VOW", what, "",
+        new changeLogs.ProtocolParameterValueBigDecimal(units.fromRad(data)))
     }
   } else if (sig == '0xd4e8be83') {
     // TODO: Register the address and start collecting events from these contracts
@@ -31,9 +41,13 @@ export function handleFile(event: LogNote): void {
     if (what == 'flapper') {
       let data = bytes.toAddress(event.params.arg2)
       system.vowFlapperContract = data
+      changeLogs.createProtocolParameterChangeLog(event, "VOW", what, "",
+        new changeLogs.ProtocolParameterValueBytes(data))
     } else if (what == 'flopper') {
       let data = bytes.toAddress(event.params.arg2)
       system.vowFlopperContract = data
+      changeLogs.createProtocolParameterChangeLog(event, "VOW", what, "",
+        new changeLogs.ProtocolParameterValueBytes(data))
     }
   }
 

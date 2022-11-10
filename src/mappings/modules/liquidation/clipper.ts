@@ -7,27 +7,36 @@ import {
   Redo as RedoEvent,
   File as FileBigIntEvent,
   File1 as FileAddressEvent,
-} from '../../../../generated/Clipper/Clipper'
+} from '../../../../generated/ClipperEth/Clipper'
 import { SaleAuction } from '../../../../generated/schema'
-import { saleAuctions, system as systemModule, users } from '../../../entities'
+import { saleAuctions, system as systemModule, users, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 
 export function handleFile1(event: FileBigIntEvent): void {
   let what = event.params.what.toString()
   let data = event.params.data
 
   let systemState = systemModule.getSystemState(event)
-
+  let protocolParameterValue: changeLogs.ProtocolParameterValueType = new changeLogs.ProtocolParameterValueBigDecimal(BigDecimal.fromString("0"))
   if (what == 'buf') {
     systemState.saleAuctionStartingPriceFactor = units.fromRay(data)
+    protocolParameterValue = new changeLogs.ProtocolParameterValueBigDecimal(systemState.saleAuctionStartingPriceFactor)
   } else if (what == 'tail') {
     systemState.saleAuctionResetTime = data
+    protocolParameterValue = new changeLogs.ProtocolParameterValueBigInt(systemState.saleAuctionResetTime)
   } else if (what == 'cusp') {
     systemState.saleAuctionDropPercentage = units.fromRay(data)
+    protocolParameterValue = new changeLogs.ProtocolParameterValueBigDecimal(systemState.saleAuctionDropPercentage)
   } else if (what == 'chip') {
     systemState.saleAuctionDaiToRaisePercentage = units.fromWad(data)
+    protocolParameterValue = new changeLogs.ProtocolParameterValueBigDecimal(systemState.saleAuctionDaiToRaisePercentage)
   } else if (what == 'tip') {
     systemState.saleAuctionFlatFee = units.fromRad(data)
+    protocolParameterValue = new changeLogs.ProtocolParameterValueBigDecimal(systemState.saleAuctionFlatFee)
   }
+  if (what) {
+    changeLogs.createProtocolParameterChangeLog(event, "CLIPPER", what, "", protocolParameterValue)
+  }
+
   systemState.save()
 }
 
@@ -36,7 +45,6 @@ export function handleFile2(event: FileAddressEvent): void {
   let data = event.params.data
 
   let systemState = systemModule.getSystemState(event)
-
   if (what == 'spotter') {
     systemState.saleAuctionSpotterContract = data
   } else if (what == 'dog') {
@@ -45,6 +53,9 @@ export function handleFile2(event: FileAddressEvent): void {
     systemState.saleAuctionVowContract = data
   } else if (what == 'calc') {
     systemState.saleAuctionCalcContract = data
+  }
+  if (what) {
+    changeLogs.createProtocolParameterChangeLog(event, "CLIPPER", what, "", new changeLogs.ProtocolParameterValueBytes(data))
   }
 
   systemState.save()

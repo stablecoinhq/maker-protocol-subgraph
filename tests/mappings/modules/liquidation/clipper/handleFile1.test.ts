@@ -1,6 +1,6 @@
 import { test, assert, clearStore, describe, beforeAll, beforeEach } from 'matchstick-as'
 import { tests } from '../../../../../src/mappings/modules/tests'
-import { File as FileBigIntEvent } from '../../../../../generated/Clipper/Clipper'
+import { File as FileBigIntEvent } from '../../../../../generated/ClipperEth/Clipper'
 import { handleFile1 } from '../../../../../src/mappings/modules/liquidation/clipper'
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import { SystemState } from '../../../../../generated/schema'
@@ -45,6 +45,9 @@ describe('Clipper#handleFile1', () => {
       assert.fieldEquals('SystemState', 'current', 'saleAuctionDropPercentage', '0')
       assert.fieldEquals('SystemState', 'current', 'saleAuctionDaiToRaisePercentage', '0')
       assert.fieldEquals('SystemState', 'current', 'saleAuctionFlatFee', '0')
+
+      let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+      assert.notInStore('ProtocolParameterChangeLog', protocolParameterChangeLogId)
     })
   })
 
@@ -57,6 +60,12 @@ describe('Clipper#handleFile1', () => {
       handleFile1(event)
 
       assert.fieldEquals('SystemState', 'current', 'saleAuctionStartingPriceFactor', '5')
+
+      let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "CLIPPER")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', what)
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', "")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "5")
     })
   })
 
@@ -69,6 +78,11 @@ describe('Clipper#handleFile1', () => {
       handleFile1(event)
 
       assert.fieldEquals('SystemState', 'current', 'saleAuctionResetTime', '60')
+      let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+      assert.fieldEquals('ProtocolParameterChangeLogBigInt', protocolParameterChangeLogId, 'contractType', "CLIPPER")
+      assert.fieldEquals('ProtocolParameterChangeLogBigInt', protocolParameterChangeLogId, 'parameterKey1', what)
+      assert.fieldEquals('ProtocolParameterChangeLogBigInt', protocolParameterChangeLogId, 'parameterKey2', "")
+      assert.fieldEquals('ProtocolParameterChangeLogBigInt', protocolParameterChangeLogId, 'parameterValue', "60")
     })
   })
 
@@ -81,6 +95,11 @@ describe('Clipper#handleFile1', () => {
       handleFile1(event)
 
       assert.fieldEquals('SystemState', 'current', 'saleAuctionDropPercentage', '50')
+      let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "CLIPPER")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', what)
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', "")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "50")
     })
   })
 
@@ -93,6 +112,11 @@ describe('Clipper#handleFile1', () => {
       handleFile1(event)
 
       assert.fieldEquals('SystemState', 'current', 'saleAuctionDaiToRaisePercentage', '1.5')
+      let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "CLIPPER")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', what)
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', "")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "1.5")
     })
   })
 
@@ -105,6 +129,11 @@ describe('Clipper#handleFile1', () => {
       handleFile1(event)
 
       assert.fieldEquals('SystemState', 'current', 'saleAuctionFlatFee', '2.5')
+      let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "CLIPPER")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', what)
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', "")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "2.5")
     })
   })
 })

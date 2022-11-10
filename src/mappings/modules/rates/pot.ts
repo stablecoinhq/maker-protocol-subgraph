@@ -4,7 +4,7 @@ import { bytes, units } from '@protofire/subgraph-toolkit'
 import { LogNote, Pot } from '../../../../generated/Pot/Pot'
 
 import { LiveChangeLog } from '../../../../generated/schema'
-import { system as systemModule, users } from '../../../entities'
+import { system as systemModule, users, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 
 export function handleFile(event: LogNote): void {
   let what = event.params.arg1.toString()
@@ -18,6 +18,9 @@ export function handleFile(event: LogNote): void {
 
       system.savingsRate = units.fromRay(data) // Dai Savings Rate
       system.save()
+
+      changeLogs.createProtocolParameterChangeLog(event, "POT", what, "",
+        new changeLogs.ProtocolParameterValueBigDecimal(system.savingsRate))
     }
   } else if (signature == '0xd4e8be83') {
     if (what == 'vow') {
@@ -25,6 +28,9 @@ export function handleFile(event: LogNote): void {
       let data = bytes.toAddress(event.params.arg2)
       system.potVowContract = data
       system.save()
+
+      changeLogs.createProtocolParameterChangeLog(event, "POT", what, "",
+        new changeLogs.ProtocolParameterValueBytes(system.potVowContract))
     }
   }
 }

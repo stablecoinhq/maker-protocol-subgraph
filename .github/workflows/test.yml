@@ -1,0 +1,20 @@
+name: Subgraph Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: node -v
+    - run: yarn -v
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '16.x'
+    - run: yarn install
+    - run: yarn fix-network:goerli
+    - run: yarn codegen && yarn build
+    - run: yarn run test

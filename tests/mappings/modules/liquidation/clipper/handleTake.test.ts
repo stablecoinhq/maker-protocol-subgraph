@@ -1,7 +1,7 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts'
 import { test, assert, clearStore, describe, afterAll } from 'matchstick-as'
 import { tests } from '../../../../../src/mappings/modules/tests'
-import { Take as TakeEvent } from '../../../../../generated/Clipper/Clipper'
+import { Take as TakeEvent } from '../../../../../generated/ClipperEth/Clipper'
 import { handleTake } from '../../../../../src/mappings/modules/liquidation/clipper'
 import { saleAuctions } from '../../../../../src/entities'
 

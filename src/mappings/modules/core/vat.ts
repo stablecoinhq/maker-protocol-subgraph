@@ -19,7 +19,7 @@ import {
   LiveChangeLog,
 } from '../../../../generated/schema'
 
-import { collaterals, collateralTypes, users, system as systemModule, vaults, systemDebts } from '../../../entities'
+import { collaterals, collateralTypes, users, system as systemModule, vaults, systemDebts, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 
 // Register a new collateral type
 export function handleInit(event: LogNote): void {
@@ -64,6 +64,9 @@ export function handleFile(event: LogNote): void {
 
     if (what == 'Line') {
       system.totalDebtCeiling = units.fromRad(data)
+      changeLogs.createProtocolParameterChangeLog(event, "VAT", "Line", "",
+        new changeLogs.ProtocolParameterValueBigDecimal(system.totalDebtCeiling))
+
     }
   } else if (signature == '0x1a0b287e') {
     let ilk = event.params.arg1.toString()
@@ -75,10 +78,19 @@ export function handleFile(event: LogNote): void {
     if (collateral != null) {
       if (what == 'spot') {
         // Spot price is stored on the current price object
+        changeLogs.createProtocolParameterChangeLog(event, "VAT", what, ilk,
+          new changeLogs.ProtocolParameterValueBigDecimal(units.fromRay(data)))
+
       } else if (what == 'line') {
         collateral.debtCeiling = units.fromRad(data)
+        changeLogs.createProtocolParameterChangeLog(event, "VAT", what, ilk,
+          new changeLogs.ProtocolParameterValueBigDecimal(collateral.debtCeiling))
+
       } else if (what == 'dust') {
         collateral.vaultDebtFloor = units.fromRad(data)
+        changeLogs.createProtocolParameterChangeLog(event, "VAT", what, ilk,
+          new changeLogs.ProtocolParameterValueBigDecimal(collateral.vaultDebtFloor))
+
       }
 
       collateral.updatedAt = event.block.timestamp
@@ -390,6 +402,7 @@ export function handleFork(event: LogNote): void {
       vault2.debt = vault2.debt.plus(units.fromWad(dart))
       vault2.save()
     } else {
+      // create a new vault
       let owner = users.getOrCreateUser(dst)
       owner.vaultCount = owner.vaultCount.plus(integer.ONE)
       owner.save()
