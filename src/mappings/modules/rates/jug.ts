@@ -4,7 +4,7 @@ import { bytes, decimal, units } from '@protofire/subgraph-toolkit'
 import { LogNote } from '../../../../generated/Jug/Jug'
 import { CollateralType } from '../../../../generated/schema'
 
-import { system as systemModule } from '../../../entities'
+import { system as systemModule, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 
 // Start stability fee collection for a particular collateral type
 export function handleInit(event: LogNote): void {
@@ -45,6 +45,9 @@ export function handleFile(event: LogNote): void {
       if (collateral) {
         collateral.stabilityFee = units.fromRay(data)
         collateral.save()
+
+        changeLogs.createProtocolParameterChangeLog(event, "JUG", what, ilk,
+          new changeLogs.ProtocolParameterValueBigDecimal(collateral.stabilityFee))
       }
     }
   } else if (signature == '0x29ae8114') {
@@ -54,6 +57,9 @@ export function handleFile(event: LogNote): void {
     if (what == 'base') {
       system.baseStabilityFee = units.fromRay(data)
       system.save()
+      changeLogs.createProtocolParameterChangeLog(event, "JUG", what, "",
+        new changeLogs.ProtocolParameterValueBigDecimal(system.baseStabilityFee))
+
     }
   } else if (signature == '0xd4e8be83') {
     let what = event.params.arg1.toString()
@@ -62,6 +68,9 @@ export function handleFile(event: LogNote): void {
     if (what == 'vow') {
       system.jugVowContract = data
       system.save()
+      changeLogs.createProtocolParameterChangeLog(event, "JUG", what, "",
+        new changeLogs.ProtocolParameterValueBytes(system.jugVowContract))
+
     }
   }
 }

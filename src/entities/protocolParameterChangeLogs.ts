@@ -3,7 +3,7 @@ import { BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 
 export namespace protocolParameterChangeLogs {
     // https://blog.covelline.com/entry/2022/09/15/094831
-    interface ProtocolParameterValueType { }
+    export interface ProtocolParameterValueType { }
     export class ProtocolParameterValueBigInt implements ProtocolParameterValueType {
         constructor(readonly payload: BigInt) { }
     }

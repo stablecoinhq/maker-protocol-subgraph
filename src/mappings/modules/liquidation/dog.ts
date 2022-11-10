@@ -1,6 +1,6 @@
 import { Cage, Digs, File, File1, File2, File3, Bark } from '../../../../generated/Dog/Dog'
 import { LiveChangeLog } from '../../../../generated/schema'
-import { collateralTypes, system as systemModule, saleAuctions } from '../../../entities'
+import { collateralTypes, system as systemModule, saleAuctions, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 import { units, bytes } from '@protofire/subgraph-toolkit'
 
 export function handleCage(event: Cage): void {
@@ -31,6 +31,9 @@ export function handleFileVow(event: File1): void {
     let system = systemModule.getSystemState(event)
     system.dogVowContract = event.params.data
     system.save()
+
+    changeLogs.createProtocolParameterChangeLog(event, "DOG", what, "",
+      new changeLogs.ProtocolParameterValueBytes(system.dogVowContract))
   }
 }
 
@@ -41,6 +44,9 @@ export function handleFileHole(event: File): void {
     let system = systemModule.getSystemState(event)
     system.maxDaiToCoverAuction = units.fromRad(event.params.data)
     system.save()
+
+    changeLogs.createProtocolParameterChangeLog(event, "DOG", what, "",
+      new changeLogs.ProtocolParameterValueBigDecimal(system.maxDaiToCoverAuction))
   }
 }
 
@@ -51,9 +57,14 @@ export function handleFileChop(event: File2): void {
   if (what == 'chop') {
     ilk.liquidationPenalty = units.fromWad(event.params.data)
     ilk.save()
+    changeLogs.createProtocolParameterChangeLog(event, "DOG", what, event.params.ilk.toString(),
+      new changeLogs.ProtocolParameterValueBigDecimal(ilk.liquidationPenalty))
+
   } else if (what == 'hole') {
     ilk.maxDaiToCoverAuction = units.fromRad(event.params.data)
     ilk.save()
+    changeLogs.createProtocolParameterChangeLog(event, "DOG", what, event.params.ilk.toString(),
+      new changeLogs.ProtocolParameterValueBigDecimal(ilk.maxDaiToCoverAuction))
   }
 }
 
@@ -64,6 +75,8 @@ export function handleFileClip(event: File3): void {
   if (what == 'clip') {
     ilk.liquidatorAddress = bytes.toAddress(event.params.clip)
     ilk.save()
+    changeLogs.createProtocolParameterChangeLog(event, "DOG", what, event.params.ilk.toString(),
+      new changeLogs.ProtocolParameterValueBytes(ilk.liquidatorAddress))
   }
 }
 

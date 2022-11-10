@@ -24,6 +24,7 @@ test('Vat#handleFile updates SystemState.totalDebtCeiling when signature is 0x29
 
   assert.fieldEquals('SystemState', 'current', 'totalDebtCeiling', '100.5')
   let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "VAT")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', "Line")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', "")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "100.5")
@@ -51,6 +52,7 @@ test('Vat#handleFile updates CollateralType.debtCeiling when signature is 0x1a0b
 
   assert.fieldEquals('CollateralType', collateralTypeId, 'debtCeiling', '100.5')
   let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "VAT")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', "line")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', collateralTypeId)
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "100.5")
@@ -83,6 +85,7 @@ test('Vat#handleFile updates CollateralType.vaultDebtFloor when signature is 0x1
   assert.fieldEquals('CollateralType', collateralTypeId, 'updatedAtTransaction', event.transaction.hash.toHexString())
 
   let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "VAT")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', "dust")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', collateralTypeId)
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "100.5")
@@ -110,6 +113,7 @@ test('Vat#handleFile updates ProtocolParameterChangeLogBigDecimal.parameterValue
   handleFile(event)
 
   let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "VAT")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', "spot")
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', collateralTypeId)
   assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "100.5")
