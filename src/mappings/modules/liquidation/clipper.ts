@@ -7,7 +7,7 @@ import {
   Redo as RedoEvent,
   File as FileBigIntEvent,
   File1 as FileAddressEvent,
-} from '../../../../generated/Clipper/Clipper'
+} from '../../../../generated/ClipperEth/Clipper'
 import { SaleAuction } from '../../../../generated/schema'
 import { saleAuctions, system as systemModule, users, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 

@@ -1,6 +1,6 @@
 import { test, assert, clearStore, describe, beforeAll, beforeEach } from 'matchstick-as'
 import { tests } from '../../../../../src/mappings/modules/tests'
-import { File as FileBigIntEvent } from '../../../../../generated/Clipper/Clipper'
+import { File as FileBigIntEvent } from '../../../../../generated/ClipperEth/Clipper'
 import { handleFile1 } from '../../../../../src/mappings/modules/liquidation/clipper'
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import { SystemState } from '../../../../../generated/schema'

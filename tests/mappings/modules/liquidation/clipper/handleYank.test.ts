@@ -1,6 +1,6 @@
 import { BigInt } from '@graphprotocol/graph-ts'
 import { clearStore, describe, test, beforeEach, afterEach, assert } from 'matchstick-as'
-import { Yank as YankEvent } from '../../../../../generated/Clipper/Clipper'
+import { Yank as YankEvent } from '../../../../../generated/ClipperEth/Clipper'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { handleYank } from '../../../../../src/mappings/modules/liquidation/clipper'
 import { SaleAuction } from '../../../../../generated/schema'

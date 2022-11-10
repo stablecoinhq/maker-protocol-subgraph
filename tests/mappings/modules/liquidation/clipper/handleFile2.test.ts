@@ -1,6 +1,6 @@
 import { test, assert, clearStore, describe, beforeAll, beforeEach } from 'matchstick-as'
 import { tests } from '../../../../../src/mappings/modules/tests'
-import { File1 as FileAddressEvent } from '../../../../../generated/Clipper/Clipper'
+import { File1 as FileAddressEvent } from '../../../../../generated/ClipperEth/Clipper'
 import { handleFile2 } from '../../../../../src/mappings/modules/liquidation/clipper'
 import { Address, Bytes } from '@graphprotocol/graph-ts'
 import { SystemState } from '../../../../../generated/schema'

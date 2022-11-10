@@ -1,7 +1,7 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts'
 import { test, assert, clearStore, describe } from 'matchstick-as'
 import { tests } from '../../../../../src/mappings/modules/tests'
-import { Redo as RedoEvent } from '../../../../../generated/Clipper/Clipper'
+import { Redo as RedoEvent } from '../../../../../generated/ClipperEth/Clipper'
 import { handleRedo } from '../../../../../src/mappings/modules/liquidation/clipper'
 import { saleAuctions } from '../../../../../src/entities'
 

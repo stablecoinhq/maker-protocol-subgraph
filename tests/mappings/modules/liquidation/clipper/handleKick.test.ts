@@ -1,7 +1,7 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts'
 import { test, assert, clearStore, describe } from 'matchstick-as'
 import { tests } from '../../../../../src/mappings/modules/tests'
-import { Kick as KickEvent } from '../../../../../generated/Clipper/Clipper'
+import { Kick as KickEvent } from '../../../../../generated/ClipperEth/Clipper'
 import { handleKick } from '../../../../../src/mappings/modules/liquidation/clipper'
 
 describe('Clipper#handleKick', () => {
