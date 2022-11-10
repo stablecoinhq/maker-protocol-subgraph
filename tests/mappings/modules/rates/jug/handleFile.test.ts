@@ -42,7 +42,7 @@ function createEventIlk(ilk: string, what: string, data: string): LogNote {
   let usr = tests.helpers.params.getBytes('usr', Bytes.fromUTF8(''))
   let arg1 = tests.helpers.params.getBytes('arg1', ilkBytes)
   let arg2 = tests.helpers.params.getBytes('arg2', whatBytes)
-  let dataParam = tests.helpers.params.getBytes('data', strRadToBytes(data))
+  let dataParam = tests.helpers.params.getBytes('data', Bytes.fromHexString(data))
 
   let event = changetype<LogNote>(tests.helpers.events.getNewEvent([sig, usr, arg1, arg2, dataParam]))
   return event
@@ -92,9 +92,14 @@ describe('Jug#handleFile', () => {
     test('Updates CollateralType.stabilityFee', () => {
       let ilk = '5257413030312d410000'
       let what = 'duty'
-      let data = '10000000000000000000000000000' // 10 ray
+      let dataBytes =
+        (new Bytes(4)) // sig
+          .concat(new Bytes(32)) // arg1
+          .concat(new Bytes(32)) // arg2
+          .concat(strRadToBytes("1000000000937303470807876289"))
+          .toHexString()
 
-      let event = createEventIlk(ilk, what, data)
+      let event = createEventIlk(ilk, what, dataBytes)
 
       // create de collateralstype to test
       let collateral = collateralTypes.loadOrCreateCollateralType(ilk)
@@ -102,12 +107,12 @@ describe('Jug#handleFile', () => {
 
       handleFile(event)
 
-      assert.fieldEquals('CollateralType', ilk, 'stabilityFee', '10')
+      assert.fieldEquals('CollateralType', ilk, 'stabilityFee', '1.000000000937303470807876289')
       let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
       assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'contractType', "JUG")
       assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', what)
       assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', ilk)
-      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "10")
+      assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "1.000000000937303470807876289")
 
       clearStore()
     })

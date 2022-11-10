@@ -37,7 +37,7 @@ export function handleFile(event: LogNote): void {
   if (signature == '0x1a0b287e') {
     let ilk = event.params.arg1.toString()
     let what = event.params.arg2.toString()
-    let data = bytes.toUnsignedInt(event.params.data)
+    let data = bytes.toUnsignedInt(Bytes.fromUint8Array(event.params.data.subarray(68, 100)))
 
     if (what == 'duty') {
       let collateral = CollateralType.load(ilk)
