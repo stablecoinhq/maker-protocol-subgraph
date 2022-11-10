@@ -835,19 +835,68 @@ type SaleAuction @entity {
   clipperContract: Bytes!
 }
 
-interface CollateralTypeLog {
-  id: ID!
-  collateralType: CollateralType!
-  block: BigInt!
-  timestamp: BigInt!
-  transaction: Bytes!
+"Add more contract types if you need to"
+enum ContractType {
+  SPOT
+  VAT
+  ABACUS
+  CLIPPER
+  DOG
+  JUG
+  POT
+  FLAP
+  FLOP
+  VOW
 }
 
-type CollateralTypeChangeLog implements CollateralTypeLog @entity {
+"Tracks protocol parameter change by file() calls"
+interface ProtocolParameterChangeLog {
   id: ID!
-  collateralType: CollateralType!
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
-  mat: BigDecimal!
+  contractType: ContractType!
+  "human readable parameter name"
+  parameterKey1: String!
+  parameterKey2: String!
 }
+
+type ProtocolParameterChangeLogBytes implements ProtocolParameterChangeLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+  contractType: ContractType!
+  "human readable parameter name"
+  parameterKey1: String!
+  parameterKey2: String!
+  "human readable parameter value"
+  parameterValue: Bytes!
+}
+
+type ProtocolParameterChangeLogBigInt implements ProtocolParameterChangeLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+  contractType: ContractType!
+  "human readable parameter name"
+  parameterKey1: String!
+  parameterKey2: String!
+  "human readable parameter value"
+  parameterValue: BigInt!
+}
+
+type ProtocolParameterChangeLogBigDecimal implements ProtocolParameterChangeLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+  contractType: ContractType!
+  "human readable parameter name"
+  parameterKey1: String!
+  parameterKey2: String!
+  "human readable parameter value"
+  parameterValue: BigDecimal!
+}
+

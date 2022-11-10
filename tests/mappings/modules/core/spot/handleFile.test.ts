@@ -37,9 +37,10 @@ test('Spot#handleFile updates CollateralType.liquidationRatio when signature is 
   handleFile(event)
 
   assert.fieldEquals('CollateralType', ilk, 'liquidationRatio', '25165824')
-  let collateralTypeChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-  assert.fieldEquals('CollateralTypeChangeLog', collateralTypeChangeLogId, 'mat', '25165824')
-  assert.fieldEquals('CollateralTypeChangeLog', collateralTypeChangeLogId, 'collateralType', ilk)
+  let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', '25165824')
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', ilk)
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', "mat")
 })
 
 test('Spot#handleFile creates SpotParLog when signature is 0x29ae8114 and what is par', () => {
@@ -64,6 +65,11 @@ test('Spot#handleFile creates SpotParLog when signature is 0x29ae8114 and what i
   handleFile(event)
 
   assert.fieldEquals('SpotParLog', event.transaction.hash.toHexString(), 'par', '1000000000000000000000000000')
+
+  let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  assert.fieldEquals('ProtocolParameterChangeLogBigInt', protocolParameterChangeLogId, 'parameterValue', "1000000000000000000000000000")
+  assert.fieldEquals('ProtocolParameterChangeLogBigInt', protocolParameterChangeLogId, 'parameterKey2', "")
+  assert.fieldEquals('ProtocolParameterChangeLogBigInt', protocolParameterChangeLogId, 'parameterKey1', "par")
 })
 
 test('Spot#handleFile creates CollateralPrice when signature is 0xebecb39d and what is pip', () => {
@@ -93,5 +99,10 @@ test('Spot#handleFile creates CollateralPrice when signature is 0xebecb39d and w
   handleFile(event)
 
   assert.fieldEquals('CollateralPrice', event.block.number.toString() + '-' + ilk, 'value', '25165824000000000')
+  let protocolParameterChangeLogId = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterValue', "25165824000000000")
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey2', ilk)
+  assert.fieldEquals('ProtocolParameterChangeLogBigDecimal', protocolParameterChangeLogId, 'parameterKey1', "pip")
+
   clearStore()
 })
