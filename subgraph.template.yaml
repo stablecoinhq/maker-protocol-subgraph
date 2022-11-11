@@ -728,3 +728,30 @@ dataSources:
       eventHandlers:
         - event: File(indexed bytes32,uint256)
           handler: handleFile
+
+  #
+  # DSChief Vote Module
+  #
+  # Count votes and bookkeeping suggestions
+  - name: DSChief
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: DSChief
+      address: '{{ DSChief.address }}'
+      startBlock: {{ DSChief.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/modules/vote/dsChief.ts
+      abis:
+        - name: DSChief
+          file: ./abis/DSChief.json
+      entities:
+        - SystemState
+        - VoteLog
+      eventHandlers:
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0xed08132900000000000000000000000000000000000000000000000000000000'
+          handler: handleVote

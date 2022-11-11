@@ -148,5 +148,15 @@
             "address": "0x7d9f92DAa9254Bbd1f479DBE5058f74C2381A898",
             "startBlock": "12329765"
         }
+    },
+    "DSChief": {
+        "goerli": {
+            "address": "0x8c7FAeFDCE1438cF99B6654C3c3De3816eC0e879",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x0a3f6849f78076aefaDf113F5BED87720274dDC0",
+            "startBlock": "12329765"
+        }
     }
 }
