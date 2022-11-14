@@ -900,3 +900,11 @@ type ProtocolParameterChangeLogBigDecimal implements ProtocolParameterChangeLog 
   parameterValue: BigDecimal!
 }
 
+"Tracks voting logs by indexing DSChief contract calls"
+type VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+  msg: Bytes!
+}

@@ -1,18 +1,53 @@
 import { BigDecimal } from '@graphprotocol/graph-ts'
-import { LogNote } from '../../../../generated/DSChief/DSChief'
-import { system as systemModule } from '../../../entities'
+import { system as systemModule, voteLogs } from '../../../entities'
 import { Bytes } from '@graphprotocol/graph-ts'
 import { bytes, integer, decimal, units } from '@protofire/subgraph-toolkit'
+import { LogNote } from '../../../../generated/DSChief/DSChief'
 
 export function handleVote(event: LogNote): void {
     let signature = event.params.sig.toHexString()
-    let system = systemModule.getSystemState(event)
-    event
+    // vote(bytes32 slate)
+    if (signature == '0xa69beaba') {
+        voteLogs.createVoteLog(event, signature + "-" + "handleVote")
+    }
+}
 
-    // vote(address[] yays)
-    // https://github.com/dapphub/ds-chief/blob/master/src/chief.sol#L83-L89
-    if (signature == '0xed081329') {
-        // should parse address[] yays from event.parameters.dataStart or something
-        // log vote action
+export function handleLaunch(event: LogNote): void {
+    let signature = event.params.sig.toHexString()
+    // launch()
+    if (signature == '0x01339c21') {
+        voteLogs.createVoteLog(event, signature + "-" + "handleLaunch")
+    }
+}
+
+export function handleLock(event: LogNote): void {
+    let signature = event.params.sig.toHexString()
+    // lock(uint wad)
+    if (signature == '0xdd467064') {
+        voteLogs.createVoteLog(event, signature + "-" + "handleLock")
+    }
+}
+
+export function handleFree(event: LogNote): void {
+    let signature = event.params.sig.toHexString()
+    // free(uint wad)
+    if (signature == '0xd8ccd0f3') {
+        voteLogs.createVoteLog(event, signature + "-" + "handleFree")
+    }
+}
+
+export function handleEtch(event: LogNote): void {
+    let signature = event.params.sig.toHexString()
+    // etch(address[] memory yays)
+    if (signature == '0x5123e1fa') {
+        voteLogs.createVoteLog(event, signature + "-" + "handleEtch")
+    }
+}
+
+export function handleLift(event: LogNote): void {
+    let signature = event.params.sig.toHexString()
+    // vote(address[] memory yays)
+    if (signature == '0x3c278bd5') {
+        voteLogs.createVoteLog(event, signature + "-" + "handleLift")
     }
 }
