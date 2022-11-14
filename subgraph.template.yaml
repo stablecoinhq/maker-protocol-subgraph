@@ -749,7 +749,6 @@ dataSources:
         - name: DSChief
           file: ./abis/DSChief.json
       entities:
-        - SystemState
         - VoteLog
       eventHandlers:
         # calculated by https://www.evm-function-selector.click/
@@ -771,3 +770,40 @@ dataSources:
         - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
           topic0: '0x3c278bd500000000000000000000000000000000000000000000000000000000'
           handler: handleLift
+
+  #
+  # DSPause Vote Module
+  #
+  # Count votes and bookkeeping suggestions
+  - name: DSPause
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: DSPause
+      address: '{{ DSPause.address }}'
+      startBlock: {{ DSPause.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/modules/vote/dsPause.ts
+      abis:
+        - name: DSPause
+          file: ./abis/DSPause.json
+      entities:
+        - VoteLog
+      eventHandlers:
+        # calculated by https://www.evm-function-selector.click/
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0xe177246e00000000000000000000000000000000000000000000000000000000'
+          handler: handleSetDelay
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x46d2fbbb00000000000000000000000000000000000000000000000000000000'
+          handler: handlePlot
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x162c7de300000000000000000000000000000000000000000000000000000000'
+          handler: handleDrop
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x168ccd6700000000000000000000000000000000000000000000000000000000'
+          handler: handleExec
+

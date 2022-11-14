@@ -908,3 +908,9 @@ type VoteLog @entity {
   transaction: Bytes!
   msg: Bytes!
 }
+
+type VoteState @entity {
+  " Singleton entity. Equals to 'current' "
+  id: ID!
+  
+}

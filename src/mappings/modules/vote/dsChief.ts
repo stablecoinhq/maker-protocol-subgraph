@@ -53,12 +53,13 @@ export function handleEtch(event: LogNote): void {
 
 export function handleLift(event: LogNote): void {
     let signature = event.params.sig.toHexString()
-    // vote(address[] memory yays)
+    // lift(address whom)
     if (signature == '0x3c278bd5') {
         voteLogs.createVoteLog(event, signature + "-" + "handleLift")
-        const decodedYays = ethereum.decode("address[]", event.params.fax)
-        if (decodedYays) {
-            const yays = decodedYays.toAddressArray()
+        const decodedAddress = ethereum.decode("address", event.params.fax)
+        if (decodedAddress) {
+            const whom = decodedAddress.toAddress()
+            // set hat
         }
     }
 }
