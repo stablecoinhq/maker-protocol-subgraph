@@ -1,4 +1,4 @@
-import { BigDecimal } from '@graphprotocol/graph-ts'
+import { BigInt, ethereum } from '@graphprotocol/graph-ts'
 import { system as systemModule, voteLogs } from '../../../entities'
 import { Bytes } from '@graphprotocol/graph-ts'
 import { bytes, integer, decimal, units } from '@protofire/subgraph-toolkit'
@@ -9,6 +9,7 @@ export function handleVote(event: LogNote): void {
     // vote(bytes32 slate)
     if (signature == '0xa69beaba') {
         voteLogs.createVoteLog(event, signature + "-" + "handleVote")
+        const slate = event.params.foo
     }
 }
 
@@ -25,6 +26,7 @@ export function handleLock(event: LogNote): void {
     // lock(uint wad)
     if (signature == '0xdd467064') {
         voteLogs.createVoteLog(event, signature + "-" + "handleLock")
+        const wad = BigInt.fromUnsignedBytes(event.params.foo)
     }
 }
 
@@ -33,6 +35,7 @@ export function handleFree(event: LogNote): void {
     // free(uint wad)
     if (signature == '0xd8ccd0f3') {
         voteLogs.createVoteLog(event, signature + "-" + "handleFree")
+        const wad = BigInt.fromUnsignedBytes(event.params.foo)
     }
 }
 
@@ -41,6 +44,10 @@ export function handleEtch(event: LogNote): void {
     // etch(address[] memory yays)
     if (signature == '0x5123e1fa') {
         voteLogs.createVoteLog(event, signature + "-" + "handleEtch")
+        const decodedYays = ethereum.decode("address[]", event.params.fax)
+        if (decodedYays) {
+            const yays = decodedYays.toAddressArray()
+        }
     }
 }
 
@@ -49,5 +56,9 @@ export function handleLift(event: LogNote): void {
     // vote(address[] memory yays)
     if (signature == '0x3c278bd5') {
         voteLogs.createVoteLog(event, signature + "-" + "handleLift")
+        const decodedYays = ethereum.decode("address[]", event.params.fax)
+        if (decodedYays) {
+            const yays = decodedYays.toAddressArray()
+        }
     }
 }
