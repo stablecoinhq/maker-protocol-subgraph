@@ -901,16 +901,125 @@ type ProtocolParameterChangeLogBigDecimal implements ProtocolParameterChangeLog 
 }
 
 "Tracks voting logs by indexing DSChief contract calls"
-type VoteLog @entity {
+interface VoteLog {
   id: ID!
   block: BigInt!
   timestamp: BigInt!
   transaction: Bytes!
-  msg: Bytes!
+
+  hat: Bytes!
+}
+
+type VoteLogSetDelay implements VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+  delay_: BigInt!
+}
+
+type VoteLogPlot  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+  usr: Bytes!
+  tag: Bytes!
+  fax: Bytes!
+  eta: BigInt!
+}
+
+type VoteLogDrop  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+  usr: Bytes!
+  tag: Bytes!
+  fax: Bytes!
+  eta: BigInt!
+}
+
+type VoteLogExec  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+  usr: Bytes!
+  tag: Bytes!
+  fax: Bytes!
+  eta: BigInt!
+}
+
+type VoteLogVote  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+  slate: Bytes!
+}
+
+type VoteLogLaunch  implements VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+}
+
+type VoteLogLock  implements VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+  wad: BigInt!
+}
+
+type VoteLogFree  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+  wad: BigInt!
+}
+
+type VoteLogEtch  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
+  yays: [Bytes!]
+}
+
+type VoteLogLift  implements VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: Bytes!
 }
 
 type VoteState @entity {
   " Singleton entity. Equals to 'current' "
   id: ID!
-  
+  " top address "
+  hat: Bytes!
 }
