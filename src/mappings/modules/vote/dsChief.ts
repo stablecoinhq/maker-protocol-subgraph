@@ -76,7 +76,7 @@ export function handleEtch(event: LogNote): void {
         let voteState = vote.getVoteState()
         const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
 
-        const decodedYays = ethereum.decode("address[]", event.params.fax)
+        const decodedYays = ethereum.decode("address[]", Bytes.fromUint8Array(event.params.fax.subarray(4)))
         if (decodedYays) {
             const yays = decodedYays.toAddressArray()
             let voteLog = new VoteLogEtch(id)
@@ -98,7 +98,7 @@ export function handleLift(event: LogNote): void {
     // lift(address whom)
     if (signature == '0x3c278bd5') {
         const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-        const decodedAddress = ethereum.decode("address", event.params.fax)
+        const decodedAddress = ethereum.decode("address", Bytes.fromUint8Array(event.params.fax.subarray(4)))
         if (decodedAddress) {
             const whom = decodedAddress.toAddress()
             // set hat

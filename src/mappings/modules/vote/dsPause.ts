@@ -1,4 +1,4 @@
-import { BigInt, ethereum } from '@graphprotocol/graph-ts'
+import { BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { vote } from '../../../entities'
 import { LogNote } from '../../../../generated/DSPause/DSPause'
 import { decodeTuple } from '../../../utils'
@@ -24,7 +24,7 @@ export function handlePlot(event: LogNote): void {
     let signature = event.params.sig.toHexString()
     // plot(address usr, bytes32 tag, bytes memory fax, uint eta)
     if (signature == '0x46d2fbbb') {
-        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", event.params.fax)
+        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
         if (decodedParams) {
             let voteState = vote.getVoteState()
             const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
@@ -48,7 +48,7 @@ export function handleDrop(event: LogNote): void {
     let signature = event.params.sig.toHexString()
     // drop(address usr, bytes32 tag, bytes memory fax, uint eta)
     if (signature == '0x162c7de3') {
-        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", event.params.fax)
+        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
         if (decodedParams) {
             let voteState = vote.getVoteState()
             const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
@@ -73,7 +73,7 @@ export function handleExec(event: LogNote): void {
     let signature = event.params.sig.toHexString()
     // exec(address usr, bytes32 tag, bytes memory fax, uint eta)
     if (signature == '0x168ccd67') {
-        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", event.params.fax)
+        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
         if (decodedParams) {
             let voteState = vote.getVoteState()
             const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
