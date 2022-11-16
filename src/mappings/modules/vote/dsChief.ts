@@ -1,4 +1,4 @@
-import { BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { vote } from '../../../entities'
 import { LogNote } from '../../../../generated/DSChief/DSChief'
 import { VoteLogEtch, VoteLogFree, VoteLogLaunch, VoteLogLift, VoteLogLock, VoteLogVote } from '../../../../generated/schema'
@@ -86,7 +86,7 @@ export function handleEtch(event: LogNote): void {
 
             voteLog.hat = voteState.hat
             if (yays) {
-                voteLog.yays = yays
+                voteLog.yays = yays.map<Bytes>((yay: Address) => Bytes.fromHexString(yay.toHexString()))
                 voteLog.save()
             }
         }
