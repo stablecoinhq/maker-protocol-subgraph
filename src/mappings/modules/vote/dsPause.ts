@@ -15,8 +15,11 @@ export function handleSetDelay(event: LogNote): void {
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
         voteLog.hat = voteState.hat
-        voteLog.delay_ = BigInt.fromUnsignedBytes(event.params.foo)
-        voteLog.save()
+        const delay_ = ethereum.decode("uint256", event.params.foo)
+        if (delay_) {
+            voteLog.delay_ = delay_.toBigInt()
+            voteLog.save()
+        }
     }
 }
 

@@ -14,8 +14,11 @@ export function handleVote(event: LogNote): void {
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
         voteLog.hat = voteState.hat
-        voteLog.slate = event.params.foo
-        voteLog.save()
+        const slate = ethereum.decode("bytes", event.params.foo)
+        if (slate) {
+            voteLog.slate = slate.toBytes()
+            voteLog.save()
+        }
     }
 }
 
@@ -46,8 +49,11 @@ export function handleLock(event: LogNote): void {
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
         voteLog.hat = voteState.hat
-        voteLog.wad = BigInt.fromUnsignedBytes(event.params.foo)
-        voteLog.save()
+        const wad = ethereum.decode("uint256", event.params.foo)
+        if (wad) {
+            voteLog.wad = wad.toBigInt()
+            voteLog.save()
+        }
     }
 }
 
@@ -64,8 +70,11 @@ export function handleFree(event: LogNote): void {
         voteLog.transaction = event.transaction.hash
 
         voteLog.hat = voteState.hat
-        voteLog.wad = BigInt.fromUnsignedBytes(event.params.foo)
-        voteLog.save()
+        const wad = ethereum.decode("uint256", event.params.foo)
+        if (wad) {
+            voteLog.wad = wad.toBigInt()
+            voteLog.save()
+        }
     }
 }
 
