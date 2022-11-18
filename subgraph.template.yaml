@@ -750,7 +750,14 @@ dataSources:
           file: ./abis/DSChief.json
       entities:
         - VoteLog
-        - VoteState
+        - VoteSlate
+        - VoteApproval
+        - VoteLogEtch
+        - VoteLogFree
+        - VoteLogLaunch
+        - VoteLogLift
+        - VoteLogLock
+        - VoteLogVote
       eventHandlers:
         # calculated by https://www.evm-function-selector.click/
         - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
@@ -771,6 +778,12 @@ dataSources:
         - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
           topic0: '0x3c278bd500000000000000000000000000000000000000000000000000000000'
           handler: handleLift
+        # - event: Etch(indexed bytes32)
+        #   handler: handleEtchEvent
+        # function vote(address[] memory yays)
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0xed08132900000000000000000000000000000000000000000000000000000000'
+          handler: handleEtchAndVote
 
   #
   # DSPause Vote Module

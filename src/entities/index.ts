@@ -10,3 +10,4 @@ export * from './daiApproval'
 export * from './daiTransfer'
 export * from './saleAuction'
 export * from "./protocolParameterChangeLogs"
+export * from "./votes"
