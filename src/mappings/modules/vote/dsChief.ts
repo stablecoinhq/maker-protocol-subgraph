@@ -77,8 +77,7 @@ export function handleFree(event: LogNote): void {
             voteLog.save()
 
             const user = users.getOrCreateUser(event.transaction.from)
-            const weight = (user.voteWeight ? user.voteWeight : BigInt.fromI32(0))
-            user.voteWeight = weight.minus(wad.toBigInt())
+            user.voteWeight = user.voteWeight.minus(wad.toBigInt())
             if (user.voteSlate) {
                 const voteSlate = votes.loadOrCreateVoteSlate(user.voteSlate)
                 for (let i = 0; i < voteSlate.addresses.length; i++) {
@@ -94,39 +93,42 @@ export function handleFree(event: LogNote): void {
     }
 }
 
+/**
+ * This function is separated from handleEtch becaue subgraph framework does not allow to return value in handler function.
+ * This function could be called from `etch(address[] memory yays)` or `function vote(address[] memory yays)`.
+ * @param event 
+ * @returns return slate Bytes
+ */
 function handleEtchInternal(event: LogNote): Bytes {
     let signature = event.params.sig.toHexString()
-    // etch(address[] memory yays)
-    // if (signature == '0x5123e1fa') {
     const oldId = event.transaction.hash.toHex() + '-' + (event.logIndex.minus(BigInt.fromI32(1))).toString() + "-etch"
     let oldVoteLog = VoteLogEtch.load(oldId)
-    if (oldVoteLog == null) {
+    // it's ok to run if directly called from `etch(address[] memory yays)`
+    if (oldVoteLog == null || signature == '0x5123e1fa') {
         let systemState = systemModule.getSystemState(event)
         const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + "-etch"
         let voteLog = new VoteLogEtch(id)
         voteLog.block = event.block.number
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
-        // voteLog.sender = event.transaction.from
-        voteLog.sender = Bytes.fromUint8Array(event.params.fax.subarray(4))
+        voteLog.sender = event.transaction.from
         voteLog.hat = systemState.hat
 
-        const decodedYays = ethereum.decode("address[]", Bytes.fromUint8Array(event.params.fax.subarray(4)))
-        if (decodedYays) {
-            const yays = decodedYays.toAddressArray()
-            const addressList: Bytes[] = yays.map<Bytes>(
-                (yay: Address) => yay as Bytes
-            )
-            voteLog.yays = addressList
+        const decodedYaysBytes = ethereum.decode("bytes32[]", Bytes.fromUint8Array(event.params.fax.subarray(4)))
+        const decodedYaysAddress = ethereum.decode("address[]", Bytes.fromUint8Array(event.params.fax.subarray(4)))
+        if (decodedYaysBytes && decodedYaysAddress) {
+            const yaysAddress: Bytes[] = decodedYaysAddress.toAddressArray().map<Bytes>((address) => Bytes.fromHexString(address.toHexString()))
+            voteLog.yays = yaysAddress
             voteLog.save()
 
-            // encode addressList to hash
+            const packedYays: Bytes = decodedYaysBytes.toBytesArray().reduce<Bytes>((previous, current) => previous.concat(current), new Bytes(0))
             const slate = crypto.keccak256(
-                ByteArray.fromHexString(Bytes.fromUint8Array(event.params.fax.subarray(4)).toHexString())
+                ByteArray.fromHexString(packedYays.toHexString())
             )
+
             const voteSlate = votes.loadOrCreateVoteSlate(slate.toHexString())
             voteSlate.slate = Bytes.fromByteArray(slate)
-            voteSlate.addresses = addressList
+            voteSlate.addresses = yaysAddress
             voteSlate.save()
 
             return Bytes.fromByteArray(slate)
@@ -145,15 +147,23 @@ export function handleEtch(event: LogNote): void {
     handleEtchInternal(event)
 }
 
-function handleVoteWithSlate(event: LogNote, slateArg: Bytes | null): void {
+/**
+ * This function could be called from `vote(bytes32 slate)` and `function vote(address[] memory yays)`.
+ * If it's directly called from `vote(bytes32 slate)`, it's ok to run the whole code.
+ * However, if it's indirectly called from `function vote(address[] memory yays)`, the same methods are called twice.
+ * In that case, you have to check if old log does not exist yet.
+ * @param event 
+ * @param slateArg 
+ */
+function handleVoteWithSlate(event: LogNote, slateArg: Bytes): void {
 
     const oldId = event.transaction.hash.toHex() + '-' + (event.logIndex.minus(BigInt.fromI32(1))).toString() + "-vote"
     let oldVoteLog = VoteLogVote.load(oldId)
-    if (oldVoteLog == null) {
+    let signature = event.params.sig.toHexString()
 
-        let signature = event.params.sig.toHexString()
-        // vote(bytes32 slate)
-        // if (signature == '0xa69beaba') {
+    // in case of `vote(bytes32 slate)`, this function will run
+    if (oldVoteLog == null || signature == '0xa69beaba') {
+
         let systemState = systemModule.getSystemState(event)
         const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + "-vote"
         let voteLog = new VoteLogVote(id)
@@ -163,11 +173,15 @@ function handleVoteWithSlate(event: LogNote, slateArg: Bytes | null): void {
         voteLog.hat = systemState.hat
         voteLog.sender = event.transaction.from
 
-        const slateEthValue = ethereum.decode("bytes", event.params.foo)
-        let slate: Bytes | null = slateArg ? slateArg : (slateEthValue ? slateEthValue.toBytes() : null)
-        if (slate) {
-            voteLog.slate = slate
-            voteLog.save()
+        // in case of `vote(bytes32 slate)`, `event.params.fax.subarray(4)` contains slate value
+        const slateEthValue = ethereum.decode("bytes32", Bytes.fromUint8Array(event.params.fax.subarray(4)))
+        // bytes shold contain some value
+        let slate: Bytes = slateArg.length > 0 ? slateArg : (slateEthValue ? slateEthValue.toBytes() : new Bytes(0))
+        voteLog.slate = slate
+        voteLog.save()
+
+        // slate length should not be zero. it should receive byte32 from args or `event.params.fax`
+        if (slate.length != 0) {
 
             // move user vote weight from old slate to new slate
             const user = users.getOrCreateUser(event.transaction.from)
@@ -187,14 +201,14 @@ function handleVoteWithSlate(event: LogNote, slateArg: Bytes | null): void {
                     voteApproval.approvals = voteApproval.approvals.plus(user.voteWeight)
                     voteApproval.save()
                 }
+                user.save()
             }
         }
-        // }
     }
 }
 
 export function handleVote(event: LogNote): void {
-    handleVoteWithSlate(event, null)
+    handleVoteWithSlate(event, new Bytes(0))
 }
 
 export function handleEtchAndVote(event: LogNote): void {
@@ -212,7 +226,6 @@ export function handleLift(event: LogNote): void {
             const whom = decodedAddress.toAddress()
             // set hat
             let systemState = systemModule.getSystemState(event)
-            // create or load VoteApproval
             const voteApproval = votes.loadOrCreateVoteApproval(whom.toHexString())
             voteApproval.save()
             systemState.hat = whom.toHexString()
