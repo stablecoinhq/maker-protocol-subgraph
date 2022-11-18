@@ -919,7 +919,7 @@ interface VoteLog {
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
 }
 
 type VoteLogSetDelay implements VoteLog @entity {
@@ -929,7 +929,7 @@ type VoteLogSetDelay implements VoteLog @entity {
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
   delay_: BigInt!
 }
 
@@ -940,7 +940,7 @@ type VoteLogPlot  implements VoteLog @entity{
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
   usr: Bytes!
   tag: Bytes!
   fax: Bytes!
@@ -954,7 +954,7 @@ type VoteLogDrop  implements VoteLog @entity{
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
   usr: Bytes!
   tag: Bytes!
   fax: Bytes!
@@ -968,7 +968,7 @@ type VoteLogExec  implements VoteLog @entity{
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
   usr: Bytes!
   tag: Bytes!
   fax: Bytes!
@@ -982,8 +982,9 @@ type VoteLogVote  implements VoteLog @entity{
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
-  slate: Bytes!
+  sender: User
+  oldSlate: VoteSlate
+  newSlate: VoteSlate
 }
 
 type VoteLogLaunch  implements VoteLog @entity {
@@ -993,7 +994,7 @@ type VoteLogLaunch  implements VoteLog @entity {
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
 }
 
 type VoteLogLock  implements VoteLog @entity {
@@ -1003,7 +1004,7 @@ type VoteLogLock  implements VoteLog @entity {
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
   wad: BigInt!
 }
 
@@ -1014,7 +1015,7 @@ type VoteLogFree  implements VoteLog @entity{
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
   wad: BigInt!
 }
 
@@ -1025,7 +1026,7 @@ type VoteLogEtch  implements VoteLog @entity{
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  sender: User
   yays: [Bytes!]
 }
 
@@ -1036,7 +1037,8 @@ type VoteLogLift  implements VoteLog @entity {
   transaction: Bytes!
 
   hat: VoteApproval
-  sender: Bytes!
+  oldHat: VoteApproval
+  sender: User
 }
 
 type VoteApproval @entity {

@@ -17,7 +17,7 @@ export function handleSetDelay(event: LogNote): void {
         if (systemState.hat != null) {
             voteLog.hat = systemState.hat
         }
-        voteLog.sender = event.transaction.from
+        voteLog.sender = event.transaction.from.toHexString()
         const delay_ = ethereum.decode("uint256", event.params.foo)
         if (delay_) {
             voteLog.delay_ = delay_.toBigInt()
@@ -42,7 +42,7 @@ export function handlePlot(event: LogNote): void {
             if (systemState.hat != null) {
                 voteLog.hat = systemState.hat
             }
-            voteLog.sender = event.transaction.from
+            voteLog.sender = event.transaction.from.toHexString()
             voteLog.usr = decodedParams[0].toAddress()
             voteLog.tag = decodedParams[1].toBytes()
             voteLog.fax = decodedParams[2].toBytes()
@@ -70,7 +70,7 @@ export function handleDrop(event: LogNote): void {
             if (systemState.hat != null) {
                 voteLog.hat = systemState.hat
             }
-            voteLog.sender = event.transaction.from
+            voteLog.sender = event.transaction.from.toHexString()
             voteLog.usr = decodedParams[0].toAddress()
             voteLog.tag = decodedParams[1].toBytes()
             voteLog.fax = decodedParams[2].toBytes()
@@ -98,7 +98,7 @@ export function handleExec(event: LogNote): void {
             if (systemState.hat != null) {
                 voteLog.hat = systemState.hat
             }
-            voteLog.sender = event.transaction.from
+            voteLog.sender = event.transaction.from.toHexString()
             voteLog.usr = decodedParams[0].toAddress()
             voteLog.tag = decodedParams[1].toBytes()
             voteLog.fax = decodedParams[2].toBytes()

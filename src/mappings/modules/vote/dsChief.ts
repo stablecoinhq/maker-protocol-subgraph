@@ -34,7 +34,7 @@ export function handleLock(event: LogNote): void {
         if (systemState.hat != null) {
             voteLog.hat = systemState.hat
         }
-        voteLog.sender = event.transaction.from
+        voteLog.sender = event.transaction.from.toHexString()
         const wad = ethereum.decode("uint256", event.params.foo)
         if (wad) {
             voteLog.wad = wad.toBigInt()
@@ -70,7 +70,7 @@ export function handleFree(event: LogNote): void {
         if (systemState.hat != null) {
             voteLog.hat = systemState.hat
         }
-        voteLog.sender = event.transaction.from
+        voteLog.sender = event.transaction.from.toHexString()
         const wad = ethereum.decode("uint256", event.params.foo)
         if (wad) {
             voteLog.wad = wad.toBigInt()
@@ -111,7 +111,7 @@ function handleEtchInternal(event: LogNote): Bytes {
         voteLog.block = event.block.number
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
-        voteLog.sender = event.transaction.from
+        voteLog.sender = event.transaction.from.toHexString()
         voteLog.hat = systemState.hat
 
         const decodedYaysBytes = ethereum.decode("bytes32[]", Bytes.fromUint8Array(event.params.fax.subarray(4)))
@@ -171,20 +171,21 @@ function handleVoteWithSlate(event: LogNote, slateArg: Bytes): void {
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
         voteLog.hat = systemState.hat
-        voteLog.sender = event.transaction.from
+        voteLog.sender = event.transaction.from.toHexString()
 
         // in case of `vote(bytes32 slate)`, `event.params.fax.subarray(4)` contains slate value
         const slateEthValue = ethereum.decode("bytes32", Bytes.fromUint8Array(event.params.fax.subarray(4)))
+        const user = users.getOrCreateUser(event.transaction.from)
         // bytes shold contain some value
         let slate: Bytes = slateArg.length > 0 ? slateArg : (slateEthValue ? slateEthValue.toBytes() : new Bytes(0))
-        voteLog.slate = slate
+        voteLog.oldSlate = user.voteSlate
+        voteLog.newSlate = slate.toHexString()
         voteLog.save()
 
         // slate length should not be zero. it should receive byte32 from args or `event.params.fax`
         if (slate.length != 0) {
 
             // move user vote weight from old slate to new slate
-            const user = users.getOrCreateUser(event.transaction.from)
             if (user.voteWeight.gt(BigInt.fromString("0"))) {
                 const oldVoteSlate = votes.loadOrCreateVoteSlate(user.voteSlate)
                 for (let i = 0; i < oldVoteSlate.addresses.length; i++) {
@@ -228,7 +229,9 @@ export function handleLift(event: LogNote): void {
             let systemState = systemModule.getSystemState(event)
             const voteApproval = votes.loadOrCreateVoteApproval(whom.toHexString())
             voteApproval.save()
-            systemState.hat = whom.toHexString()
+            const newHat = whom.toHexString()
+            const oldHat = systemState.hat
+            systemState.hat = newHat
             systemState.save()
 
             let voteLog = new VoteLogLift(id)
@@ -236,10 +239,9 @@ export function handleLift(event: LogNote): void {
             voteLog.timestamp = event.block.timestamp
             voteLog.transaction = event.transaction.hash
 
-            if (systemState.hat != null) {
-                voteLog.hat = systemState.hat
-            }
-            voteLog.sender = event.transaction.from
+            voteLog.hat = newHat
+            voteLog.oldHat = oldHat
+            voteLog.sender = event.transaction.from.toHexString()
             voteLog.save()
         }
     }
