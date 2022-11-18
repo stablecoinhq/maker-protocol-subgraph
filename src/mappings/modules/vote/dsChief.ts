@@ -94,15 +94,15 @@ export function handleFree(event: LogNote): void {
     }
 }
 
-export function handleEtch(event: LogNote): Bytes {
+function handleEtchInternal(event: LogNote): Bytes {
     let signature = event.params.sig.toHexString()
     // etch(address[] memory yays)
     // if (signature == '0x5123e1fa') {
-    const oldId = event.transaction.hash.toHex() + '-' + (event.logIndex.minus(BigInt.fromI32(1))).toString()
+    const oldId = event.transaction.hash.toHex() + '-' + (event.logIndex.minus(BigInt.fromI32(1))).toString() + "-etch"
     let oldVoteLog = VoteLogEtch.load(oldId)
     if (oldVoteLog == null) {
         let systemState = systemModule.getSystemState(event)
-        const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+        const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + "-etch"
         let voteLog = new VoteLogEtch(id)
         voteLog.block = event.block.number
         voteLog.timestamp = event.block.timestamp
@@ -141,9 +141,13 @@ export function handleEtch(event: LogNote): Bytes {
     }
 }
 
+export function handleEtch(event: LogNote): void {
+    handleEtchInternal(event)
+}
+
 function handleVoteWithSlate(event: LogNote, slateArg: Bytes | null): void {
 
-    const oldId = event.transaction.hash.toHex() + '-' + (event.logIndex.minus(BigInt.fromI32(1))).toString()
+    const oldId = event.transaction.hash.toHex() + '-' + (event.logIndex.minus(BigInt.fromI32(1))).toString() + "-vote"
     let oldVoteLog = VoteLogVote.load(oldId)
     if (oldVoteLog == null) {
 
@@ -151,7 +155,7 @@ function handleVoteWithSlate(event: LogNote, slateArg: Bytes | null): void {
         // vote(bytes32 slate)
         // if (signature == '0xa69beaba') {
         let systemState = systemModule.getSystemState(event)
-        const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+        const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString() + "-vote"
         let voteLog = new VoteLogVote(id)
         voteLog.block = event.block.number
         voteLog.timestamp = event.block.timestamp
@@ -194,7 +198,7 @@ export function handleVote(event: LogNote): void {
 }
 
 export function handleEtchAndVote(event: LogNote): void {
-    const slate: Bytes = handleEtch(event)
+    const slate: Bytes = handleEtchInternal(event)
     handleVoteWithSlate(event, slate)
 }
 
