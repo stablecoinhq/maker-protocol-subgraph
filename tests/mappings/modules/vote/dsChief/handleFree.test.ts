@@ -1,7 +1,7 @@
-import { Bytes, Address, BigInt, ethereum, crypto, ByteArray, log } from '@graphprotocol/graph-ts'
+import { Bytes, Address, BigInt, log } from '@graphprotocol/graph-ts'
 import { test, clearStore, assert } from 'matchstick-as'
 import { LogNote } from '../../../../../generated/DSChief/DSChief'
-import { handleFree, handleLock } from '../../../../../src/mappings/modules/vote/dsChief'
+import { handleFree } from '../../../../../src/mappings/modules/vote/dsChief'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { system as systemModule, users, votes } from '../../../../../src/entities'
 
