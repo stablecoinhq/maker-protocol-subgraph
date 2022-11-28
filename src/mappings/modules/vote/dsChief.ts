@@ -1,4 +1,4 @@
-import { Address, BigInt, Bytes, ethereum, crypto, ByteArray } from '@graphprotocol/graph-ts'
+import { Address, BigInt, Bytes, ethereum, crypto, ByteArray, log } from '@graphprotocol/graph-ts'
 import { users, system as systemModule, votes } from '../../../entities'
 import { Etch, LogNote } from '../../../../generated/DSChief/DSChief'
 import { VoteApproval, VoteLogEtch, VoteLogFree, VoteLogLaunch, VoteLogLift, VoteLogLock, VoteLogVote, VoteSlate } from '../../../../generated/schema'
