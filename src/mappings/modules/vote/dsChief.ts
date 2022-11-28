@@ -13,9 +13,8 @@ export function handleLaunch(event: LogNote): void {
         voteLog.block = event.block.number
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
-        if (systemState.hat != null) {
-            voteLog.hat = systemState.hat
-        }
+        voteLog.sender = event.transaction.from.toHexString()
+        voteLog.hat = systemState.hat
         voteLog.save()
     }
 }
@@ -31,9 +30,7 @@ export function handleLock(event: LogNote): void {
         voteLog.block = event.block.number
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
-        if (systemState.hat != null) {
-            voteLog.hat = systemState.hat
-        }
+        voteLog.hat = systemState.hat
         voteLog.sender = event.transaction.from.toHexString()
         const wad = ethereum.decode("uint256", event.params.foo)
         if (wad) {
