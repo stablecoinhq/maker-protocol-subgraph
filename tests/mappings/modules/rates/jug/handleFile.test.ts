@@ -4,6 +4,8 @@ import { LogNote } from '../../../../../generated/Jug/Jug'
 import { handleFile } from '../../../../../src/mappings/modules/rates/jug'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { collateralTypes } from '../../../../../src/entities/collateralTypes'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function strRadToBytes(value: string): Bytes {
   return Bytes.fromUint8Array(Bytes.fromBigInt(BigInt.fromString(value)).reverse())

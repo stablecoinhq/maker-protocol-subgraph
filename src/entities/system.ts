@@ -1,11 +1,17 @@
 import { ethereum, Address } from '@graphprotocol/graph-ts'
 import { decimal, integer, units } from '@protofire/subgraph-toolkit'
 
-import { SystemState } from '../../generated/schema'
+import { ChainLog, SystemState } from '../../generated/schema'
 import { Vat } from '../../generated/Vat/Vat'
 export namespace system {
   export function getSystemState(event: ethereum.Event): SystemState {
-    let vatContract = Vat.bind(Address.fromString('0x1b1FE236166eD0Ac829fa230afE38E61bC281C5e'))
+    const chainLog = ChainLog.load("MCD_VAT")
+    // this is mainnet address of MCD_VAT
+    let address: string = '0x35d1b3f3d7966a1dfe207aa4514c12a259a0492b'
+    if (chainLog) {
+      address = chainLog.address.toHexString()
+    }
+    let vatContract = Vat.bind(Address.fromString(address))
     let state = SystemState.load('current')
 
     if (state == null) {

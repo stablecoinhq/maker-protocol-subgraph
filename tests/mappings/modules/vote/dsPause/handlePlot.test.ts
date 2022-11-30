@@ -4,6 +4,8 @@ import { LogNote } from '../../../../../generated/DSPause/DSPause'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { handlePlot } from '../../../../../src/mappings/modules/vote/dsPause'
 import { decodeTuple } from '../../../../../src/utils'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(usr: string, tag: string, faxArg: string, eta: string): LogNote {
     const sig = Bytes.fromHexString("0x46d2fbbb")

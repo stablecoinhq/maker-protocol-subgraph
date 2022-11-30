@@ -5,6 +5,8 @@ import { handleFile1 } from '../../../../../src/mappings/modules/liquidation/cli
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import { SystemState } from '../../../../../generated/schema'
 import { decimal, integer } from '@protofire/subgraph-toolkit'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(what: string, data: BigInt): FileBigIntEvent {
   return changetype<FileBigIntEvent>(

@@ -23,3 +23,18 @@ export function mockChi(): void {
     [ethereum.Value.fromI32(chiResult)],
   )
 }
+
+export function mockDebt(debtValue: string): void {
+  let debtResult = BigInt.fromString(debtValue)
+  tests.helpers.contractCalls.mockFunction(
+    Address.fromString('0x35d1b3f3d7966a1dfe207aa4514c12a259a0492b'),
+    'debt',
+    'debt():(uint256)',
+    [],
+    [ethereum.Value.fromUnsignedBigInt(debtResult)],
+  )
+}
+
+export function mockCommon(): void {
+  mockDebt("123456789")
+}

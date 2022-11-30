@@ -3,6 +3,8 @@ import { test, clearStore, assert, describe, beforeEach } from 'matchstick-as'
 import { LogNote } from '../../../../../generated/DSPause/DSPause'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { handleExec } from '../../../../../src/mappings/modules/vote/dsPause'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(usr: string, tag: string, faxArg: string, eta: string): LogNote {
     const sig = Bytes.fromHexString("0x168ccd67")

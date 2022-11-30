@@ -3,6 +3,8 @@ import { test, clearStore, assert, describe, beforeEach } from 'matchstick-as'
 import { LogNote } from '../../../../../generated/DSPause/DSPause'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { handleSetDelay } from '../../../../../src/mappings/modules/vote/dsPause'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function strRadToBytes32(value: string): Bytes {
     const byteArray = Bytes.fromBigInt(BigInt.fromString(value))

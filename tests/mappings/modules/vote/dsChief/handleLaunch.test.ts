@@ -4,6 +4,8 @@ import { LogNote } from '../../../../../generated/DSChief/DSChief'
 import { handleLaunch } from '../../../../../src/mappings/modules/vote/dsChief'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { system as systemModule } from '../../../../../src/entities'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 test('dsChief#handleLaunch process event', () => {
     const sig = Bytes.fromHexString("0x01339c21")
