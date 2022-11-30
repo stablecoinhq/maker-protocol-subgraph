@@ -825,3 +825,29 @@ dataSources:
           topic0: '0x168ccd6700000000000000000000000000000000000000000000000000000000'
           handler: handleExec
 
+  #
+  # ChainLog Module
+  #
+  # Keeps track of all related addresses in system
+  - name: ChainLog
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: ChainLog
+      address: '{{ ChainLog.address }}'
+      startBlock: {{ ChainLog.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/modules/log/chainLog.ts
+      abis:
+        - name: ChainLog
+          file: ./abis/ChainLog.json
+        - name: Vat
+          file: ./abis/Vat.json
+      entities:
+        - ChainLog
+      eventHandlers:
+        - event: UpdateAddress(bytes32,address)
+          handler: handleUpdateAddress

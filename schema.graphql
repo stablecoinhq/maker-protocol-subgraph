@@ -1061,3 +1061,12 @@ type VoteSlate @entity {
   "address list"
   addresses: [Bytes!]!
 }
+
+type ChainLog @entity {
+  "chainlog capital contract name as in https://chainlog.makerdao.com/"
+  id: ID!
+  "contract address"
+  address: Bytes!
+  "version of contract"
+  version: String
+}
