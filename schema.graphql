@@ -453,6 +453,9 @@ type SystemState @entity {
   # vote module (DSChief)
   #
   hat: VoteApproval
+
+  " The latest timestamp in which a system parameters was modified "
+  timestamp: BigInt!
 }
 
 interface Auction {

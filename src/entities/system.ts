@@ -39,7 +39,8 @@ export namespace system {
     // Hotfix for totalDebt
     let debt = vatContract.try_debt();
     state.totalDebt = debt.reverted ? state.totalDebt : units.fromRad(debt.value);
-
+    // timestamp for daistats
+    state.timestamp = event.block.timestamp
     return state as SystemState
   }
 }
