@@ -748,6 +748,9 @@ dataSources:
       abis:
         - name: DSChief
           file: ./abis/DSChief.json
+        - name: Vat
+          file: ./abis/Vat.json
+
       entities:
         - VoteLog
         - VoteSlate
@@ -801,6 +804,9 @@ dataSources:
       abis:
         - name: DSPause
           file: ./abis/DSPause.json
+        - name: Vat
+          file: ./abis/Vat.json
+
       entities:
         - VoteLog
         - VoteState
