@@ -231,6 +231,12 @@ type User @entity {
 
   " User's mkr approvals "
   mkrApprovals: [MkrApproval!] @derivedFrom(field: "owner")
+
+  "User's vote slates"
+  voteSlate: VoteSlate!
+
+  "User's locked maker weight for vote"
+  voteWeight: BigInt!
 }
 
 " Contract used to execute transactions and sequences of transactions on behalf of a user "
@@ -442,6 +448,11 @@ type SystemState @entity {
 
   " Per-step multiplicative factor (step) [ray]"
   multiplicatorFactorPerStep: BigDecimal!
+
+  #
+  # vote module (DSChief)
+  #
+  hat: VoteApproval
 }
 
 interface Auction {
@@ -900,3 +911,150 @@ type ProtocolParameterChangeLogBigDecimal implements ProtocolParameterChangeLog 
   parameterValue: BigDecimal!
 }
 
+"Tracks voting logs by indexing DSChief contract calls"
+interface VoteLog {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+}
+
+type VoteLogSetDelay implements VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+  delay_: BigInt!
+}
+
+type VoteLogPlot  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+  usr: Bytes!
+  tag: Bytes!
+  fax: Bytes!
+  eta: BigInt!
+}
+
+type VoteLogDrop  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+  usr: Bytes!
+  tag: Bytes!
+  fax: Bytes!
+  eta: BigInt!
+}
+
+type VoteLogExec  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+  usr: Bytes!
+  tag: Bytes!
+  fax: Bytes!
+  eta: BigInt!
+}
+
+type VoteLogVote  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+  oldSlate: VoteSlate
+  newSlate: VoteSlate
+}
+
+type VoteLogLaunch  implements VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+}
+
+type VoteLogLock  implements VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+  wad: BigInt!
+}
+
+type VoteLogFree  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+  wad: BigInt!
+}
+
+type VoteLogEtch  implements VoteLog @entity{
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  sender: User
+  yays: [Bytes!]
+}
+
+type VoteLogLift  implements VoteLog @entity {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transaction: Bytes!
+
+  hat: VoteApproval
+  oldHat: VoteApproval
+  sender: User
+}
+
+type VoteApproval @entity {
+  "candidate address and its weighted vote sum. id is address."
+  id: ID!
+  "same as id."
+  address: Bytes!
+  "weighted vote sum"
+  approvals: BigInt!
+}
+
+type VoteSlate @entity {
+  "combination of candidate address list. id is unique hash value."
+  id: ID!
+  "same as id."
+  slate: Bytes!
+  "address list"
+  addresses: [Bytes!]!
+}

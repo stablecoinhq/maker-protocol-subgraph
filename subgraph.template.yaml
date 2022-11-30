@@ -728,3 +728,94 @@ dataSources:
       eventHandlers:
         - event: File(indexed bytes32,uint256)
           handler: handleFile
+
+  #
+  # DSChief Vote Module
+  #
+  # Count votes and bookkeeping suggestions
+  - name: DSChief
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: DSChief
+      address: '{{ DSChief.address }}'
+      startBlock: {{ DSChief.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/modules/vote/dsChief.ts
+      abis:
+        - name: DSChief
+          file: ./abis/DSChief.json
+      entities:
+        - VoteLog
+        - VoteSlate
+        - VoteApproval
+        - VoteLogEtch
+        - VoteLogFree
+        - VoteLogLaunch
+        - VoteLogLift
+        - VoteLogLock
+        - VoteLogVote
+      eventHandlers:
+        # calculated by https://www.evm-function-selector.click/
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0xa69beaba00000000000000000000000000000000000000000000000000000000'
+          handler: handleVote # function vote(byte32) -> 0xa69beaba
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x01339c2100000000000000000000000000000000000000000000000000000000'
+          handler: handleLaunch
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0xdd46706400000000000000000000000000000000000000000000000000000000'
+          handler: handleLock
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0xd8ccd0f300000000000000000000000000000000000000000000000000000000'
+          handler: handleFree
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x5123e1fa00000000000000000000000000000000000000000000000000000000'
+          handler: handleEtch # function etch(address[]) -> 0x5123e1fa
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x3c278bd500000000000000000000000000000000000000000000000000000000'
+          handler: handleLift
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0xed08132900000000000000000000000000000000000000000000000000000000'
+          handler: handleEtchAndVote # function vote(address[] memory yays)
+
+  #
+  # DSPause Vote Module
+  #
+  # Count votes and bookkeeping suggestions
+  - name: DSPause
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: DSPause
+      address: '{{ DSPause.address }}'
+      startBlock: {{ DSPause.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/modules/vote/dsPause.ts
+      abis:
+        - name: DSPause
+          file: ./abis/DSPause.json
+      entities:
+        - VoteLog
+        - VoteState
+      eventHandlers:
+        # calculated by https://www.evm-function-selector.click/
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0xe177246e00000000000000000000000000000000000000000000000000000000'
+          handler: handleSetDelay
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x46d2fbbb00000000000000000000000000000000000000000000000000000000'
+          handler: handlePlot
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x162c7de300000000000000000000000000000000000000000000000000000000'
+          handler: handleDrop
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,uint256,bytes)
+          topic0: '0x168ccd6700000000000000000000000000000000000000000000000000000000'
+          handler: handleExec
+

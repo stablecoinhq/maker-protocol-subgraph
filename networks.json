@@ -148,5 +148,25 @@
             "address": "0x7d9f92DAa9254Bbd1f479DBE5058f74C2381A898",
             "startBlock": "12329765"
         }
+    },
+    "DSChief": {
+        "goerli": {
+            "address": "0x8c7FAeFDCE1438cF99B6654C3c3De3816eC0e879",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0x0a3f6849f78076aefaDf113F5BED87720274dDC0",
+            "startBlock": "12329765"
+        }
+    },
+    "DSPause": {
+        "goerli": {
+            "address": "0x07d37F3B95C35C88C6Ed4B12689D317Dbc7c681C",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0xbE286431454714F511008713973d3B053A2d38f3",
+            "startBlock": "12329765"
+        }
     }
 }
