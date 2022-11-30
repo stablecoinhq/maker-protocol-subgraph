@@ -1,4 +1,4 @@
-import { BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { BigInt, Bytes, ethereum, log } from '@graphprotocol/graph-ts'
 import { system as systemModule } from '../../../entities'
 import { LogNote } from '../../../../generated/DSPause/DSPause'
 import { decodeTuple } from '../../../utils'
@@ -14,9 +14,7 @@ export function handleSetDelay(event: LogNote): void {
         voteLog.block = event.block.number
         voteLog.timestamp = event.block.timestamp
         voteLog.transaction = event.transaction.hash
-        if (systemState.hat != null) {
-            voteLog.hat = systemState.hat
-        }
+        voteLog.hat = systemState.hat
         voteLog.sender = event.transaction.from.toHexString()
         const delay_ = ethereum.decode("uint256", event.params.foo)
         if (delay_) {
@@ -30,7 +28,7 @@ export function handlePlot(event: LogNote): void {
     let signature = event.params.sig.toHexString()
     // plot(address usr, bytes32 tag, bytes memory fax, uint eta)
     if (signature == '0x46d2fbbb') {
-        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
+        const decodedParams = decodeTuple("(address,bytes32,bytes,uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
         if (decodedParams) {
             let systemState = systemModule.getSystemState(event)
             const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
@@ -38,10 +36,7 @@ export function handlePlot(event: LogNote): void {
             voteLog.block = event.block.number
             voteLog.timestamp = event.block.timestamp
             voteLog.transaction = event.transaction.hash
-
-            if (systemState.hat != null) {
-                voteLog.hat = systemState.hat
-            }
+            voteLog.hat = systemState.hat
             voteLog.sender = event.transaction.from.toHexString()
             voteLog.usr = decodedParams[0].toAddress()
             voteLog.tag = decodedParams[1].toBytes()
@@ -57,7 +52,7 @@ export function handleDrop(event: LogNote): void {
     let signature = event.params.sig.toHexString()
     // drop(address usr, bytes32 tag, bytes memory fax, uint eta)
     if (signature == '0x162c7de3') {
-        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
+        const decodedParams = decodeTuple("(address,bytes32,bytes,uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
         if (decodedParams) {
             let systemState = systemModule.getSystemState(event)
             const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
@@ -66,10 +61,7 @@ export function handleDrop(event: LogNote): void {
             voteLog.block = event.block.number
             voteLog.timestamp = event.block.timestamp
             voteLog.transaction = event.transaction.hash
-
-            if (systemState.hat != null) {
-                voteLog.hat = systemState.hat
-            }
+            voteLog.hat = systemState.hat
             voteLog.sender = event.transaction.from.toHexString()
             voteLog.usr = decodedParams[0].toAddress()
             voteLog.tag = decodedParams[1].toBytes()
@@ -85,7 +77,7 @@ export function handleExec(event: LogNote): void {
     let signature = event.params.sig.toHexString()
     // exec(address usr, bytes32 tag, bytes memory fax, uint eta)
     if (signature == '0x168ccd67') {
-        const decodedParams = decodeTuple("(address,bytes32,bytes, uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
+        const decodedParams = decodeTuple("(address,bytes32,bytes,uint256)", Bytes.fromUint8Array(event.params.fax.subarray(4)))
         if (decodedParams) {
             let systemState = systemModule.getSystemState(event)
             const id = event.transaction.hash.toHex() + '-' + event.logIndex.toString()
@@ -94,10 +86,7 @@ export function handleExec(event: LogNote): void {
             voteLog.block = event.block.number
             voteLog.timestamp = event.block.timestamp
             voteLog.transaction = event.transaction.hash
-
-            if (systemState.hat != null) {
-                voteLog.hat = systemState.hat
-            }
+            voteLog.hat = systemState.hat
             voteLog.sender = event.transaction.from.toHexString()
             voteLog.usr = decodedParams[0].toAddress()
             voteLog.tag = decodedParams[1].toBytes()
