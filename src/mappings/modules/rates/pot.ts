@@ -3,7 +3,7 @@ import { bytes, units } from '@protofire/subgraph-toolkit'
 
 import { LogNote, Pot } from '../../../../generated/Pot/Pot'
 
-import { LiveChangeLog } from '../../../../generated/schema'
+import { ChainLog, LiveChangeLog } from '../../../../generated/schema'
 import { system as systemModule, users, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 
 export function handleFile(event: LogNote): void {
@@ -75,7 +75,13 @@ export function handleExit(event: LogNote): void {
 
 export function handleDrip(event: LogNote): void {
   let system = systemModule.getSystemState(event)
-  let potContract = Pot.bind(Address.fromString('0x197e90f9fad81970ba7976f33cbd77088e5d7cf7'))
+  // this is mainnet address of MCD_POT
+  const chainLogPot = ChainLog.load("MCD_POT")
+  let address: string = '0x197E90f9FAD81970bA7976f33CbD77088E5D7cf7'
+  if (chainLogPot) {
+    address = chainLogPot.address.toHexString()
+  }
+  let potContract = Pot.bind(Address.fromString(address))
 
   let callResult = potContract.try_chi()
   if (callResult.reverted) {
