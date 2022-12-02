@@ -497,9 +497,9 @@ dataSources:
           topic0: '0x7f8661a100000000000000000000000000000000000000000000000000000000'
           handler: handleExit
 
-        # function drip(uint tab)
+        # function drip()
         - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,bytes)
-          topic0: '0x58326b7a00000000000000000000000000000000000000000000000000000000'
+          topic0: '0x9f678cca00000000000000000000000000000000000000000000000000000000'
           handler: handleDrip
 
   #
