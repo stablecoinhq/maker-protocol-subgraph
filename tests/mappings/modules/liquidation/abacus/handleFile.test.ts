@@ -3,6 +3,8 @@ import { afterAll, beforeAll, clearStore, describe, test, assert } from 'matchst
 import { File } from '../../../../../generated/StairstepExponentialDecrease/StairstepExponentialDecrease'
 import { handleFile } from '../../../../../src/mappings/modules/liquidation/abacus'
 import { tests } from '../../../../../src/mappings/modules/tests'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 describe('Abacus#handleFile', () => {
   describe('When [what] = cut', () => {

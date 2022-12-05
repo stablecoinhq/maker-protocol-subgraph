@@ -4,6 +4,8 @@ import { LogNote } from '../../../../../generated/DSChief/DSChief'
 import { handleLock } from '../../../../../src/mappings/modules/vote/dsChief'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { system as systemModule, users, votes } from '../../../../../src/entities'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function strRadToBytes(value: string): Bytes {
     const byteArray = Bytes.fromBigInt(BigInt.fromString(value))

@@ -497,9 +497,9 @@ dataSources:
           topic0: '0x7f8661a100000000000000000000000000000000000000000000000000000000'
           handler: handleExit
 
-        # function drip(uint tab)
+        # function drip()
         - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed bytes32,bytes)
-          topic0: '0x58326b7a00000000000000000000000000000000000000000000000000000000'
+          topic0: '0x9f678cca00000000000000000000000000000000000000000000000000000000'
           handler: handleDrip
 
   #
@@ -748,6 +748,9 @@ dataSources:
       abis:
         - name: DSChief
           file: ./abis/DSChief.json
+        - name: Vat
+          file: ./abis/Vat.json
+
       entities:
         - VoteLog
         - VoteSlate
@@ -801,6 +804,9 @@ dataSources:
       abis:
         - name: DSPause
           file: ./abis/DSPause.json
+        - name: Vat
+          file: ./abis/Vat.json
+
       entities:
         - VoteLog
         - VoteState
@@ -819,3 +825,29 @@ dataSources:
           topic0: '0x168ccd6700000000000000000000000000000000000000000000000000000000'
           handler: handleExec
 
+  #
+  # ChainLog Module
+  #
+  # Keeps track of all related addresses in system
+  - name: ChainLog
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: ChainLog
+      address: '{{ ChainLog.address }}'
+      startBlock: {{ ChainLog.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/modules/log/chainLog.ts
+      abis:
+        - name: ChainLog
+          file: ./abis/ChainLog.json
+        - name: Vat
+          file: ./abis/Vat.json
+      entities:
+        - ChainLog
+      eventHandlers:
+        - event: UpdateAddress(bytes32,address)
+          handler: handleUpdateAddress

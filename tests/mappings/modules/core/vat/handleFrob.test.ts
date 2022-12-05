@@ -5,6 +5,8 @@ import { CollateralType, Vault } from '../../../../../generated/schema'
 import { LogNote } from '../../../../../generated/Vat/Vat'
 import { handleFrob } from '../../../../../src/mappings/modules/core/vat'
 import { tests } from '../../../../../src/mappings/modules/tests'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(
   signature: string,

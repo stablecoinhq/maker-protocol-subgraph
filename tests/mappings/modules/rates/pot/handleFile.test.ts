@@ -3,6 +3,8 @@ import { test, clearStore, assert, describe, beforeEach } from 'matchstick-as'
 import { LogNote } from '../../../../../generated/Pot/Pot'
 import { handleFile } from '../../../../../src/mappings/modules/rates/pot'
 import { tests } from '../../../../../src/mappings/modules/tests'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function strRadToBytes(value: string): Bytes {
   return Bytes.fromUint8Array(Bytes.fromBigInt(BigInt.fromString(value)).reverse())

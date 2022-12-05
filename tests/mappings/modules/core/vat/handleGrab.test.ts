@@ -4,6 +4,8 @@ import { LogNote } from '../../../../../generated/Vat/Vat'
 import { collateralTypes } from '../../../../../src/entities'
 import { handleGrab } from '../../../../../src/mappings/modules/core/vat'
 import { tests } from '../../../../../src/mappings/modules/tests'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(collateralTypeId: string, u: string, v: string, w: string, dink: string, dart: string): LogNote {
   let a = new Bytes(100 + 32 - 20)

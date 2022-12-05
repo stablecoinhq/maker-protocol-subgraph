@@ -168,5 +168,15 @@
             "address": "0xbE286431454714F511008713973d3B053A2d38f3",
             "startBlock": "12329765"
         }
+    },
+    "ChainLog": {
+        "goerli": {
+            "address": "0xA25435EFc77767e17CB41dA5c33685d6bDEc1f61",
+            "startBlock": "6678000"
+        },
+        "mainnet": {
+            "address": "0xdA0Ab1e0017DEbCd72Be8599041a2aa3bA7e740F",
+            "startBlock": "8928158"
+        }
     }
 }

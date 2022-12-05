@@ -9,6 +9,8 @@ import {
   handleFileVow,
 } from '../../../../../src/mappings/modules/liquidation/dog'
 import { tests } from '../../../../../src/mappings/modules/tests'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 let ilk = 'test'
 let address = '0x10994f7d520ef08dd877499fb1b052dbde3d4601'

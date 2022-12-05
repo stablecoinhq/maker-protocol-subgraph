@@ -5,6 +5,8 @@ import { handleEtch } from '../../../../../src/mappings/modules/vote/dsChief'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { system as systemModule } from '../../../../../src/entities'
 import { VoteLogEtch } from '../../../../../generated/schema'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(addressList: string[]): LogNote {
 

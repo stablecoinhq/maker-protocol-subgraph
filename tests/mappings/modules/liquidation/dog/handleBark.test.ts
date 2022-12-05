@@ -5,6 +5,8 @@ import { handleBark } from '../../../../../src/mappings/modules/liquidation/dog'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { CollateralType } from '../../../../../generated/schema'
 import { system as systemModule } from '../../../../../src/entities'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 describe('Dog#handleBark', () => {
   test('Creates a SaleAuction entity and adds to the SystemState#totalDaiAmountToCoverDebtAndFees and CollateralType#daiAmountToCoverDebtAndFees field', () => {

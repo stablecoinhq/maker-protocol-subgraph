@@ -526,13 +526,10 @@ export function handleHeal(event: LogNote): void {
     systemDebt.save()
   }
 
-  let system = SystemState.load('current')
-
-  if (system) {
-    system.totalDebt = system.totalDebt.minus(rad)
-    system.totalSystemDebt = system.totalSystemDebt.minus(rad)
-    system.save()
-  }
+  let system = systemModule.getSystemState(event)
+  system.totalDebt = system.totalDebt.minus(rad)
+  system.totalSystemDebt = system.totalSystemDebt.minus(rad)
+  system.save()
 }
 
 // Mint unbacked stablecoin

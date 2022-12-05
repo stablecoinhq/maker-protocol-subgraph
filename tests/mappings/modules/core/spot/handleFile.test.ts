@@ -5,6 +5,8 @@ import { CollateralType } from '../../../../../generated/schema'
 import { LogNote } from '../../../../../generated/Spot/Spotter'
 import { handleFile } from '../../../../../src/mappings/modules/core/spot'
 import { tests } from '../../../../../src/mappings/modules/tests'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function strRadToBytes(value: string): Bytes {
   return Bytes.fromUint8Array(Bytes.fromBigInt(BigInt.fromString(value)).reverse())

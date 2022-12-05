@@ -4,6 +4,8 @@ import { LogNote } from '../../../../../generated/DSChief/DSChief'
 import { handleLift } from '../../../../../src/mappings/modules/vote/dsChief'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { system as systemModule } from '../../../../../src/entities'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(hat: string): LogNote {
 

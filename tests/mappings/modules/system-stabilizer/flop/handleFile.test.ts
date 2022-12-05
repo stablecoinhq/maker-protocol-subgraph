@@ -3,6 +3,8 @@ import { test, clearStore, assert, log, describe } from 'matchstick-as'
 import { LogNote } from '../../../../../generated/Flop/Flopper'
 import { handleFile } from '../../../../../src/mappings/modules/system-stabilizer/flop'
 import { tests } from '../../../../../src/mappings/modules/tests'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(what: string, data: string): LogNote {
   let sig = tests.helpers.params.getBytes('sig', Bytes.fromHexString('0x1a0b287e'))

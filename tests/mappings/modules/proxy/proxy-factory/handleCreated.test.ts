@@ -5,6 +5,8 @@ import { handleCreated } from '../../../../../src/mappings/modules/proxy/proxy-f
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { users } from '../../../../../src/entities'
 import { system as systemModule } from '../../../../../src/entities'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 describe('DSProxyFactory#handleCreated', () => {
   test('Creates UserProxy entity and updates its fields. Updates the SystemState#userProxyCount and the User#proxyCount fields', () => {

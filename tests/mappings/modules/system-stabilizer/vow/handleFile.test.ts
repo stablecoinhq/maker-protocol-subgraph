@@ -4,6 +4,8 @@ import { LogNote } from '../../../../../generated/Vow/Vow'
 import { handleFile } from '../../../../../src/mappings/modules/system-stabilizer/vow'
 import { tests } from '../../../../../src/mappings/modules/tests'
 import { system as systemModule } from '../../../../../src/entities'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 let signature: string
 

@@ -4,6 +4,8 @@ import { File1 as FileAddressEvent } from '../../../../../generated/ClipperEth/C
 import { handleFile2 } from '../../../../../src/mappings/modules/liquidation/clipper'
 import { Address, Bytes } from '@graphprotocol/graph-ts'
 import { SystemState } from '../../../../../generated/schema'
+import { mockCommon } from '../../../../helpers/mockedFunctions'
+mockCommon()
 
 function createEvent(what: string, data: Address): FileAddressEvent {
   return changetype<FileAddressEvent>(

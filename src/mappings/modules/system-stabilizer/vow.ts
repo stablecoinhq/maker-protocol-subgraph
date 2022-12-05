@@ -1,6 +1,6 @@
 import { BigDecimal } from '@graphprotocol/graph-ts'
 import { bytes, units } from '@protofire/subgraph-toolkit'
-import { VowFlapLog, VowFlopLog } from '../../../../generated/schema'
+import { ChainLog, VowFlapLog, VowFlopLog } from '../../../../generated/schema'
 import { LogNote, Vow } from '../../../../generated/Vow/Vow'
 import { system as systemModule, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 import { Address } from '@graphprotocol/graph-ts'
@@ -68,7 +68,13 @@ export function handleCage(event: LogNote): void {
 export function handleFlog(event: LogNote): void {
   let era = bytes.toUnsignedInt(event.params.arg1)
   let system = systemModule.getSystemState(event)
-  let vowContract = Vow.bind(Address.fromString('0xa950524441892a31ebddf91d3ceefa04bf454466'))
+
+  const chainLogPot = ChainLog.load("MCD_VOW")
+  let address: string = '0xa950524441892a31ebddf91d3ceefa04bf454466'
+  if (chainLogPot) {
+    address = chainLogPot.address.toHexString()
+  }
+  let vowContract = Vow.bind(Address.fromString(address))
   let amount = vowContract.sin(era)
   system.systemDebtInQueue = system.systemDebtInQueue.minus(units.fromRad(amount))
 
