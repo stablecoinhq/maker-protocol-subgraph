@@ -69,7 +69,7 @@ export function handleKick(event: KickEvent): void {
   let kpr = event.params.kpr.toHexString()
   let top = units.fromRay(event.params.top)
 
-  let saleAuction = saleAuctions.loadOrCreateSaleAuction(id, event)
+  let saleAuction = saleAuctions.loadOrCreateSaleAuction(id + "-" + event.address.toHexString(), event)
   saleAuction.amountDaiToRaise = tab
   saleAuction.amountCollateralToSell = lot
   saleAuction.userExcessCollateral = usr
@@ -88,7 +88,7 @@ export function handleTake(event: TakeEvent): void {
   let tab = units.fromRad(event.params.tab)
   let lot = units.fromWad(event.params.lot)
 
-  let saleAuction = SaleAuction.load(id)
+  let saleAuction = SaleAuction.load(id + "-" + event.address.toHexString())
 
   if (saleAuction) {
     if (lot == BigDecimal.fromString('0')) {
@@ -115,7 +115,7 @@ export function handleRedo(event: RedoEvent): void {
   let id = event.params.id.toString()
   let top = units.fromRay(event.params.top)
 
-  let saleAuction = SaleAuction.load(id)
+  let saleAuction = SaleAuction.load(id + "-" + event.address.toHexString())
   if (saleAuction) {
     saleAuction.resetedAt = event.block.timestamp
     saleAuction.startingPrice = top
@@ -128,7 +128,7 @@ export function handleRedo(event: RedoEvent): void {
 export function handleYank(event: YankEvent): void {
   let id = event.params.id.toString()
 
-  let saleAuction = SaleAuction.load(id)
+  let saleAuction = SaleAuction.load(id + "-" + event.address.toHexString())
 
   if (saleAuction) {
     saleAuction.isActive = false
