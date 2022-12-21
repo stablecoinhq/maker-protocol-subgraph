@@ -11,12 +11,14 @@
     "codegen": "npx graph codegen",
     "deploy": "npx graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ protofire/maker-protocol",
     "fix-network:mainnet": "node render-templates.js mainnet",
-    "fix-network:goerli": "node render-templates.js goerli"
+    "fix-network:goerli": "node render-templates.js goerli",
+    "fix-network:hardhat": "node render-templates.js hardhat"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.28.0",
     "@graphprotocol/graph-ts": "0.27.0",
     "@protofire/subgraph-toolkit": "https://github.com/protofire/subgraph-toolkit.git#develop",
+    "ethers": "^5.7.2",
     "matchstick-as": "0.5.0",
     "mustache": "4.2.0"
   }
