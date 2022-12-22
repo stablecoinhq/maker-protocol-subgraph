@@ -1,4 +1,4 @@
-import { Bytes } from '@graphprotocol/graph-ts'
+import { BigDecimal, Bytes, log } from '@graphprotocol/graph-ts'
 import { bytes, integer, decimal, units } from '@protofire/subgraph-toolkit'
 
 import { LogNote } from '../../../../generated/Vat/Vat'
@@ -17,6 +17,7 @@ import {
   SystemState,
   CollateralTransferLog,
   LiveChangeLog,
+  CollateralPrice,
 } from '../../../../generated/schema'
 
 import { collaterals, collateralTypes, users, system as systemModule, vaults, systemDebts, protocolParameterChangeLogs as changeLogs } from '../../../entities'
@@ -224,6 +225,17 @@ export function handleMove(event: LogNote): void {
   log.save()
 }
 
+// this function exists just because assembly script does not properly
+// handle string | null type assigned as variable.
+// see related issue: https://github.com/AssemblyScript/assemblyscript/issues/2455
+const stringOrNullToString = (stringOrNull: string | null): string => {
+  if (stringOrNull === null) {
+    return ""
+  } else {
+    return stringOrNull
+  }
+}
+
 // Create or modify a Vault
 export function handleFrob(event: LogNote): void {
   let ilk = event.params.arg1.toString()
@@ -241,6 +253,7 @@ export function handleFrob(event: LogNote): void {
     let Δcollateral = units.fromWad(dink)
 
     let vault = Vault.load(urn.toHexString() + '-' + collateralType.id)
+    let vaultOldCollateralizationRatio = decimal.ZERO
 
     if (vault == null) {
       let owner = users.getOrCreateUser(urn)
@@ -254,6 +267,7 @@ export function handleFrob(event: LogNote): void {
       vault.debt = vault.debt.plus(Δdebt)
       vault.handler = urn
       vault.owner = owner.id
+      vault.safetyLevel = decimal.ZERO
 
       vault.openedAt = event.block.timestamp
       vault.openedAtBlock = event.block.number
@@ -276,6 +290,16 @@ export function handleFrob(event: LogNote): void {
 
       vaultCreationLog.save()
     } else {
+      // temporarily remember old collateralization ratio
+      let collateralTypePrice: string = stringOrNullToString(collateralType.price)
+      if (collateralTypePrice !== "") {
+        if (vault.debt.notEqual(decimal.ZERO) && collateralType.rate.notEqual(decimal.ZERO)) {
+          const price = CollateralPrice.load(collateralTypePrice)
+          if (price != null) {
+            vaultOldCollateralizationRatio = vault.collateral.times(price.value).div(vault.debt.times(collateralType.rate))
+          }
+        }
+      }
 
       // Update existing Vault
       vault.collateral = vault.collateral.plus(Δcollateral)
@@ -363,6 +387,50 @@ export function handleFrob(event: LogNote): void {
     collateralType.updatedAtBlock = event.block.number
     collateralType.updatedAtTransaction = event.transaction.hash
 
+    // calculate new safetyLevel
+    // if (liquidationRatio == oldRatio) then safetyLevel = safetyLevel + 1
+    // else safetyLevel = safetyLevel + max(5, (newRatio - liquidationRatio)/(oldRatio - liquidationRatio))
+    let ΔsafetyLevel = decimal.ZERO
+    if (collateralType.liquidationRatio.equals(vaultOldCollateralizationRatio)) {
+      // value cannot be calculated. it could be very close to liquidation,
+      // or the vault user is very strict. could be decimal.ONE instead.
+      ΔsafetyLevel = decimal.ZERO
+    } else {
+      // calculate new collateral ratio.
+      let vaultNewCollateralizationRatio = decimal.ZERO
+      let collateralTypePrice: string = stringOrNullToString(collateralType.price)
+      if (collateralTypePrice !== "") {
+        if (vault.debt.notEqual(decimal.ZERO) && collateralType.rate.notEqual(decimal.ZERO)) {
+          const price = CollateralPrice.load(collateralTypePrice)
+          if (price != null) {
+            vaultNewCollateralizationRatio = vault.collateral.times(price.value).div(vault.debt.times(collateralType.rate))
+          }
+        }
+      }
+      if (vault.collateral.equals(decimal.ZERO) ||
+        vault.debt.equals(decimal.ZERO) ||
+        vaultOldCollateralizationRatio.equals(decimal.ZERO) ||
+        vaultNewCollateralizationRatio.equals(decimal.ZERO)) {
+        // if collateral or debt is zero, the vault is considered inactive and safety is undefined.
+        // but there is still some action, so let it be one.
+        ΔsafetyLevel = BigDecimal.fromString("1")
+      } else if (collateralType.liquidationRatio.gt(vaultOldCollateralizationRatio) ||
+        collateralType.liquidationRatio.gt(vaultNewCollateralizationRatio)) {
+        // if any of collateralization ratio is less than liquidation ratio
+        // then safety level is decreased
+        ΔsafetyLevel = BigDecimal.fromString("-5")
+      } else {
+        // else, if ΔsafetyLevel can be calculated as ratio and max(..., 5),
+        // then calculate it.
+        ΔsafetyLevel = (vaultNewCollateralizationRatio.minus(collateralType.liquidationRatio))
+          .div(vaultOldCollateralizationRatio.minus(collateralType.liquidationRatio))
+        if (ΔsafetyLevel.gt(BigDecimal.fromString("5"))) {
+          ΔsafetyLevel = BigDecimal.fromString("5")
+        }
+      }
+    }
+    vault.safetyLevel = vault.safetyLevel.plus(ΔsafetyLevel)
+
     vault.save()
     collateralType.save()
     system.save()
@@ -420,6 +488,7 @@ export function handleFork(event: LogNote): void {
       vault2.openedAt = event.block.timestamp
       vault2.openedAtBlock = event.block.number
       vault2.openedAtTransaction = event.transaction.hash
+      vault2.safetyLevel = decimal.ZERO
 
       collateralType.unmanagedVaultCount = collateralType.unmanagedVaultCount.plus(integer.ONE)
       collateralType.save()

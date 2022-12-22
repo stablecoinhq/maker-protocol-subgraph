@@ -588,6 +588,9 @@ type Vault @entity {
 
   " Vault action history "
   logs: [VaultLog!] @derivedFrom(field: "vault")
+
+  " Safety Level: This number indicates safety level of vault. "
+  safetyLevel: BigDecimal!
 }
 
 interface VaultLog {
