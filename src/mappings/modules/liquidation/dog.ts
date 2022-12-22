@@ -1,5 +1,5 @@
 import { Cage, Digs, File, File1, File2, File3, Bark } from '../../../../generated/Dog/Dog'
-import { LiveChangeLog } from '../../../../generated/schema'
+import { ChainLog, LiveChangeLog } from '../../../../generated/schema'
 import { collateralTypes, system as systemModule, saleAuctions, protocolParameterChangeLogs as changeLogs } from '../../../entities'
 import { units, bytes } from '@protofire/subgraph-toolkit'
 
@@ -84,20 +84,25 @@ export function handleBark(event: Bark): void {
   let idStr = event.params.id.toString()
   let vaultId = event.params.urn.toHexString() + '-' + event.params.ilk.toString()
   let collateralTypeId = event.params.ilk.toString()
-  let saleAuction = saleAuctions.loadOrCreateSaleAuction(idStr, event)
-  saleAuction.vault = vaultId
-  saleAuction.collateralType = collateralTypeId
-  saleAuction.save()
+  const collateralTypeIdUnderScore = collateralTypeId.replace("-", "_")
+  const chainLogClipper = ChainLog.load("MCD_CLIP_" + collateralTypeIdUnderScore)
+  if (chainLogClipper) {
+    let address = chainLogClipper.address.toHexString()
+    let saleAuction = saleAuctions.loadOrCreateSaleAuction(idStr + "-" + address, event)
+    saleAuction.vault = vaultId
+    saleAuction.collateralType = collateralTypeId
+    saleAuction.save()
 
-  let due = units.fromWad(event.params.due)
+    let due = units.fromWad(event.params.due)
 
-  let collateralType = collateralTypes.loadOrCreateCollateralType(collateralTypeId)
-  let liquidationPenalty = collateralType.liquidationPenalty
-  let tab = liquidationPenalty.times(due)
-  collateralType.daiAmountToCoverDebtAndFees = collateralType.daiAmountToCoverDebtAndFees.plus(tab)
-  collateralType.save()
+    let collateralType = collateralTypes.loadOrCreateCollateralType(collateralTypeId)
+    let liquidationPenalty = collateralType.liquidationPenalty
+    let tab = liquidationPenalty.times(due)
+    collateralType.daiAmountToCoverDebtAndFees = collateralType.daiAmountToCoverDebtAndFees.plus(tab)
+    collateralType.save()
 
-  let system = systemModule.getSystemState(event)
-  system.totalDaiAmountToCoverDebtAndFees = system.totalDaiAmountToCoverDebtAndFees.plus(tab)
-  system.save()
+    let system = systemModule.getSystemState(event)
+    system.totalDaiAmountToCoverDebtAndFees = system.totalDaiAmountToCoverDebtAndFees.plus(tab)
+    system.save()
+  }
 }

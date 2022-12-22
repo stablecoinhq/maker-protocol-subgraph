@@ -1,7 +1,7 @@
 import { Bytes, BigInt, BigDecimal, Address } from '@graphprotocol/graph-ts'
 import { decimal, integer } from '@protofire/subgraph-toolkit'
 import { test, assert, clearStore, describe, afterEach, beforeEach } from 'matchstick-as'
-import { CollateralType, Vault } from '../../../../../generated/schema'
+import { CollateralPrice, CollateralType, Vault } from '../../../../../generated/schema'
 import { LogNote } from '../../../../../generated/Vat/Vat'
 import { handleFrob } from '../../../../../src/mappings/modules/core/vat'
 import { tests } from '../../../../../src/mappings/modules/tests'
@@ -38,6 +38,8 @@ function createEvent(
 let signature = '0x1a0b287e'
 let collateralTypeId: string
 let collateralType: CollateralType
+let collateralPriceId: string
+let collateralPrice: CollateralPrice
 let vaultId: string
 let vault: Vault
 let urnId: string
@@ -50,8 +52,16 @@ describe('Vat#handleFrob', () => {
   describe('when collateralType exist', () => {
     beforeEach(() => {
       collateralTypeId = 'c1'
+      collateralPriceId = "1-" + collateralTypeId
+
+      collateralPrice = new CollateralPrice(collateralPriceId)
+      collateralPrice.collateral = collateralTypeId
+      collateralPrice.value = BigDecimal.fromString('150')
+      collateralPrice.save()
+
       collateralType = new CollateralType(collateralTypeId)
       collateralType.rate = BigDecimal.fromString('1.5')
+      collateralType.price = collateralPriceId
       collateralType.save()
     })
 
@@ -93,6 +103,21 @@ describe('Vat#handleFrob', () => {
         assert.fieldEquals('Vault', vaultId, 'updatedAt', event.block.timestamp.toString())
         assert.fieldEquals('Vault', vaultId, 'updatedAtBlock', event.block.number.toString())
         assert.fieldEquals('Vault', vaultId, 'updatedAtTransaction', event.transaction.hash.toHexString())
+
+        // calculate safety level index
+        const vaultOldCollateralizationRatio = vault.collateral.times(collateralPrice.value)
+          .div(vault.debt.times(collateralType.rate))
+        const vaultNewCollateralizationRatio = vault.collateral.plus(BigDecimal.fromString('100.5')).times(collateralPrice.value)
+          .div(vault.debt.plus(BigDecimal.fromString('200.5')).times(collateralType.rate))
+        const ΔsafetyLevel = vaultNewCollateralizationRatio
+          .minus(collateralType.liquidationRatio)
+          .div(vaultOldCollateralizationRatio.minus(collateralType.liquidationRatio))
+
+        assert.fieldEquals('Vault', vaultId, 'safetyLevel', vault.safetyLevel
+          .plus(
+            ΔsafetyLevel
+          )
+          .toString())
 
         // test CollateralType updates
         assert.fieldEquals(

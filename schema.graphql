@@ -588,6 +588,9 @@ type Vault @entity {
 
   " Vault action history "
   logs: [VaultLog!] @derivedFrom(field: "vault")
+
+  " Safety Level: This number indicates safety level of vault. "
+  safetyLevel: BigDecimal!
 }
 
 interface VaultLog {
@@ -828,7 +831,7 @@ type SaleAuction @entity {
   " User to return any excess collateral [usr in SmartContract]"
   userExcessCollateral: User!
   " User where DAI incentives will be sent [kpr in SmartContract]"
-  userIncentives: User!
+  userIncentives: User
   " User who bids the auction"
   userTaker: Bytes!
   " Auction inicial price [top in SmartContract]"

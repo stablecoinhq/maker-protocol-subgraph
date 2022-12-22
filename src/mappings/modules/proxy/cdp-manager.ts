@@ -27,6 +27,7 @@ export function handleOpen(event: NewCdp): void {
     vault.debt = decimal.ZERO
     vault.handler = urn
     vault.owner = owner.id
+    vault.safetyLevel = decimal.ZERO
 
     vault.openedAt = event.block.timestamp
     vault.openedAtBlock = event.block.number

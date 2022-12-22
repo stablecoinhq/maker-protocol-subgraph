@@ -17,6 +17,7 @@ export namespace vaults {
       entity.debt = decimal.ZERO
       entity.handler = urn
       entity.owner = owner
+      entity.safetyLevel = decimal.ZERO
     }
     return entity as Vault
   }

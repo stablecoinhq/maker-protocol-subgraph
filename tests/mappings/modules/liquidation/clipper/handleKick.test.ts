@@ -29,18 +29,19 @@ describe('Clipper#handleKick', () => {
 
     handleKick(event)
 
-    assert.fieldEquals('SaleAuction', id.toString(), 'amountDaiToRaise', '5')
-    assert.fieldEquals('SaleAuction', id.toString(), 'amountCollateralToSell', '101')
+    const idStr = id.toString() + "-" + event.address.toHexString()
+    assert.fieldEquals('SaleAuction', idStr, 'amountDaiToRaise', '5')
+    assert.fieldEquals('SaleAuction', idStr, 'amountCollateralToSell', '101')
     assert.fieldEquals(
       'SaleAuction',
-      id.toString(),
+      idStr,
       'userExcessCollateral',
       '0x0000000000000000000000000000000000001111',
     )
-    assert.fieldEquals('SaleAuction', id.toString(), 'userIncentives', '0x000000000000000000000000000000000000aaaa')
-    assert.fieldEquals('SaleAuction', id.toString(), 'startingPrice', '10')
-    assert.fieldEquals('SaleAuction', id.toString(), 'updatedAt', '1001')
-    assert.fieldEquals('SaleAuction', id.toString(), 'userTaker', '0x')
+    assert.fieldEquals('SaleAuction', idStr, 'userIncentives', '0x000000000000000000000000000000000000aaaa')
+    assert.fieldEquals('SaleAuction', idStr, 'startingPrice', '10')
+    assert.fieldEquals('SaleAuction', idStr, 'updatedAt', '1001')
+    assert.fieldEquals('SaleAuction', idStr, 'userTaker', '0x')
     clearStore()
   })
 })
