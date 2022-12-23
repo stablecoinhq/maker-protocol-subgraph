@@ -308,6 +308,10 @@ type SystemState @entity {
   # Balance Sheet paramters (vow)
   #
 
+  # `flapper` and `flopper` value cannot be retrieved now because they are set in constructor.
+  # Therefore, `vowFlapperContract` and `vowFlopperContract` will be empty.
+  # see https://github.com/graphprotocol/graph-node/issues/949
+
   " Address that conforms to a FlapLike interface "
   vowFlapperContract: Bytes!
 
@@ -426,6 +430,10 @@ type SystemState @entity {
 
   " Flat fee to suck from vow to incentivize keepers (Clipper#tip) "
   saleAuctionFlatFee: BigDecimal!
+
+  # `spotter` and `dog` value cannot be retrieved now because they are set in constructor.
+  # Therefore, `saleAuctionSpotterContract` and `saleAuctionDogContract` will be empty.
+  # see https://github.com/graphprotocol/graph-node/issues/949
 
   " Spotter contract address on Clipper (Clipper#spotter) "
   saleAuctionSpotterContract: Bytes!
