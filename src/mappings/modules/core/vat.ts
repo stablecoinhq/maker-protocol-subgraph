@@ -1,4 +1,4 @@
-import { BigDecimal, Bytes, log } from '@graphprotocol/graph-ts'
+import { BigDecimal, Bytes } from '@graphprotocol/graph-ts'
 import { bytes, integer, decimal, units } from '@protofire/subgraph-toolkit'
 
 import { LogNote } from '../../../../generated/Vat/Vat'
@@ -6,7 +6,6 @@ import { LogNote } from '../../../../generated/Vat/Vat'
 import {
   CollateralType,
   Vault,
-  VaultCreationLog,
   VaultCollateralChangeLog,
   VaultDebtChangeLog,
   VaultSplitChangeLog,
@@ -14,7 +13,6 @@ import {
   CollateralChangeLog,
   User,
   SystemDebt,
-  SystemState,
   CollateralTransferLog,
   LiveChangeLog,
   CollateralPrice,
@@ -247,8 +245,6 @@ export function handleFrob(event: LogNote): void {
 
   let collateralType = CollateralType.load(ilk)
   if (collateralType != null) {
-    let system = systemModule.getSystemState(event)
-
     let Δdebt = units.fromWad(dart)
     let Δcollateral = units.fromWad(dink)
 
@@ -256,39 +252,12 @@ export function handleFrob(event: LogNote): void {
     let vaultOldCollateralizationRatio = decimal.ZERO
 
     if (vault == null) {
-      let owner = users.getOrCreateUser(urn)
-      owner.vaultCount = owner.vaultCount.plus(integer.ONE)
-      owner.save()
 
       // Register new unmanaged vault
-      vault = new Vault(urn.toHexString() + '-' + collateralType.id)
-      vault.collateralType = collateralType.id
+      vault = vaults.loadOrCreateVault(urn, collateralType, event, false)
       vault.collateral = vault.collateral.plus(Δcollateral)
       vault.debt = vault.debt.plus(Δdebt)
-      vault.handler = urn
-      vault.owner = owner.id
-      vault.safetyLevel = decimal.ZERO
 
-      vault.openedAt = event.block.timestamp
-      vault.openedAtBlock = event.block.number
-      vault.openedAtTransaction = event.transaction.hash
-
-      collateralType.unmanagedVaultCount = collateralType.unmanagedVaultCount.plus(integer.ONE)
-
-      system.unmanagedVaultCount = system.unmanagedVaultCount.plus(integer.ONE)
-
-      // Log vault creation
-      let vaultCreationLog = new VaultCreationLog(
-        event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-0',
-      )
-      vaultCreationLog.vault = vault.id
-
-      vaultCreationLog.block = event.block.number
-      vaultCreationLog.timestamp = event.block.timestamp
-      vaultCreationLog.transaction = event.transaction.hash
-      vaultCreationLog.rate = collateralType.rate
-
-      vaultCreationLog.save()
     } else {
       // temporarily remember old collateralization ratio
       let collateralTypePrice: string = stringOrNullToString(collateralType.price)
@@ -433,7 +402,6 @@ export function handleFrob(event: LogNote): void {
 
     vault.save()
     collateralType.save()
-    system.save()
   }
 }
 
@@ -451,12 +419,6 @@ export function handleFork(event: LogNote): void {
       .concat('-')
       .concat(ilk),
   )
-  let vault2 = Vault.load(
-    dst
-      .toHexString()
-      .concat('-')
-      .concat(ilk),
-  )
 
   let collateralType = CollateralType.load(ilk)
   if (collateralType) {
@@ -465,52 +427,12 @@ export function handleFork(event: LogNote): void {
       vault1.debt = vault1.debt.minus(units.fromWad(dart))
       vault1.save()
     }
-    if (vault2) {
-      vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
-      vault2.debt = vault2.debt.plus(units.fromWad(dart))
-      vault2.save()
-    } else {
-      // create a new vault
-      let owner = users.getOrCreateUser(dst)
-      owner.vaultCount = owner.vaultCount.plus(integer.ONE)
-      owner.save()
 
-      vault2 = new Vault(dst
-        .toHexString()
-        .concat('-')
-        .concat(ilk),
-      )
-      vault2.collateralType = collateralType.id
-      vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
-      vault2.debt = vault2.debt.plus(units.fromWad(dart))
-      vault2.handler = dst
-      vault2.owner = owner.id
-      vault2.openedAt = event.block.timestamp
-      vault2.openedAtBlock = event.block.number
-      vault2.openedAtTransaction = event.transaction.hash
-      vault2.safetyLevel = decimal.ZERO
+    let vault2 = vaults.loadOrCreateVault(dst, collateralType, event, false)
+    vault2.collateral = vault2.collateral.plus(units.fromWad(dink))
+    vault2.debt = vault2.debt.plus(units.fromWad(dart))
+    vault2.save()
 
-      collateralType.unmanagedVaultCount = collateralType.unmanagedVaultCount.plus(integer.ONE)
-      collateralType.save()
-
-      // update system
-      let system = systemModule.getSystemState(event)
-      system.unmanagedVaultCount = system.unmanagedVaultCount.plus(integer.ONE)
-      system.save()
-
-      // Log vault creation
-      let vaultCreationLog = new VaultCreationLog(
-        event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-0',
-      )
-      vaultCreationLog.vault = vault2.id
-      vaultCreationLog.block = event.block.number
-      vaultCreationLog.timestamp = event.block.timestamp
-      vaultCreationLog.transaction = event.transaction.hash
-      vaultCreationLog.rate = collateralType.rate
-      vaultCreationLog.save()
-
-      vault2.save()
-    }
     let log = new VaultSplitChangeLog(event.transaction.hash.toHex() + '-' + event.logIndex.toString() + '-3')
     log.src = src
     log.dst = dst
@@ -541,9 +463,6 @@ export function handleGrab(event: LogNote): void {
   let dart = bytes.toSignedInt(Bytes.fromUint8Array(event.params.data.subarray(164, 196)))
   let debtAmount = units.fromWad(dart)
 
-  let user = users.getOrCreateUser(urnAddress)
-  user.save()
-
   let liquidator = users.getOrCreateUser(liquidatorAddress)
   liquidator.save()
 
@@ -555,7 +474,7 @@ export function handleGrab(event: LogNote): void {
   collateralType.totalDebt = totalDebt
   collateralType.save()
 
-  let vault = vaults.loadOrCreateVault(urnAddress, collateralType.id, user.id)
+  let vault = vaults.loadOrCreateVault(urnAddress, collateralType, event, false)
   vault.collateral = vault.collateral.plus(collateralAmount) // dink its a negative number
   vault.debt = vault.debt.plus(debtAmount) // dart its a negative number
   vault.save()

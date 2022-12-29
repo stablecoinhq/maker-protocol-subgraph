@@ -50,6 +50,8 @@ test('Vat#handleGrab: Liquidates a Vault', () => {
 
   assert.fieldEquals('CollateralType', collateralTypeId, 'debtNormalized', '300.5')
   assert.fieldEquals('CollateralType', collateralTypeId, 'totalDebt', '100.25')
+  assert.fieldEquals('CollateralType', collateralTypeId, 'vaultCount', '0')
+  assert.fieldEquals('CollateralType', collateralTypeId, 'unmanagedVaultCount', '1')
 
   assert.fieldEquals('Vault', vaultId, 'collateral', '100.5')
   assert.fieldEquals('Vault', vaultId, 'debt', '200.5')
@@ -58,6 +60,10 @@ test('Vat#handleGrab: Liquidates a Vault', () => {
 
   assert.fieldEquals('SystemDebt', systemDebtId, 'amount', '-100.25')
   assert.fieldEquals('SystemState', 'current', 'totalSystemDebt', '-100.25')
+  assert.fieldEquals('SystemState', 'current', 'vaultCount', '0')
+  assert.fieldEquals('SystemState', 'current', 'unmanagedVaultCount', '1')
+
+  assert.fieldEquals('User', u, 'vaultCount', "1")
 
   clearStore()
 })
